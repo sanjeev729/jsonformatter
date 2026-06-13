@@ -1,0 +1,1404 @@
+---
+---
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 flex flex-col gap-6">
+  <!-- Tabs Navigation -->
+  <div class="relative flex border-b border-hairline transition-colors duration-200">
+    <!-- Mesh Gradient accent line under tabs -->
+    <div class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-cyan to-violet w-0 transition-all duration-300" id="tab-indicator"></div>
+    
+    <nav class="flex gap-2 sm:gap-6 -mb-[1px]">
+      <button 
+        data-target="panel-formatter" 
+        class="tab-btn pb-3.5 px-1 font-sans font-medium text-sm text-link border-b-2 border-link cursor-pointer transition-colors"
+      >
+        Formatter & Validator
+      </button>
+      <button 
+        data-target="panel-diff" 
+        class="tab-btn pb-3.5 px-1 font-sans font-medium text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors"
+      >
+        Diff Compare
+      </button>
+      <button 
+        data-target="panel-converters" 
+        class="tab-btn pb-3.5 px-1 font-sans font-medium text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors"
+      >
+        Converters
+      </button>
+      <button 
+        data-target="panel-encoder" 
+        class="tab-btn pb-3.5 px-1 font-sans font-medium text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors"
+      >
+        Base64 & URL
+      </button>
+    </nav>
+  </div>
+
+  <!-- Workspace Cards Area -->
+  <div class="flex-1 flex flex-col min-h-[600px] lg:flex-row gap-6">
+    <!-- Main Workspace Console -->
+    <div class="flex-1 bg-canvas border border-hairline shadow-level-3 rounded-xl overflow-hidden flex flex-col transition-all duration-200">
+      
+      <!-- Panel 1: Formatter & Linter -->
+      <div id="panel-formatter" class="workspace-panel flex-1 flex flex-col">
+        <!-- Editor Header toolbar -->
+        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs select-none">
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Upload -->
+            <label class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body font-medium shadow-level-2 transition-all cursor-pointer flex items-center gap-1.5">
+              <input type="file" id="file-uploader" class="hidden" accept=".json,.txt" />
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              Upload JSON
+            </label>
+            <!-- Sample JSON -->
+            <div class="relative group/sample">
+              <button class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body font-medium shadow-level-2 transition-all cursor-pointer flex items-center gap-1">
+                Load Sample
+                <svg class="w-3 h-3 text-mute" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div class="absolute left-0 mt-1 hidden group-hover/sample:block w-40 rounded-lg border border-hairline bg-canvas shadow-level-5 py-1 z-30">
+                <button data-sample="simple" class="sample-load-btn w-full px-3 py-1.5 text-left hover:bg-canvas-soft-2 transition-colors cursor-pointer">Simple Object</button>
+                <button data-sample="nested" class="sample-load-btn w-full px-3 py-1.5 text-left hover:bg-canvas-soft-2 transition-colors cursor-pointer">Nested Array</button>
+                <button data-sample="config" class="sample-load-btn w-full px-3 py-1.5 text-left hover:bg-canvas-soft-2 transition-colors cursor-pointer">Config File</button>
+              </div>
+            </div>
+            <!-- Clear -->
+            <button id="btn-clear" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-error font-medium shadow-level-2 transition-all cursor-pointer">
+              Clear
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-mute font-medium">Indent:</span>
+            <select id="indent-select" class="px-2 py-1 rounded border border-hairline bg-canvas text-body focus:outline-none cursor-pointer">
+              <option value="2">2 Spaces</option>
+              <option value="3">3 Spaces</option>
+              <option value="4" selected>4 Spaces</option>
+              <option value="tab">Tabs</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Editor Split Screen -->
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-hairline">
+          <!-- Left: Input Area -->
+          <div class="flex flex-col relative h-[450px] lg:h-auto min-h-[350px]">
+            <!-- File Drag/Drop Overlay -->
+            <div id="drop-zone" class="absolute inset-0 bg-canvas/90 border-2 border-dashed border-link z-20 hidden items-center justify-center flex-col gap-3 transition-opacity duration-200">
+              <div class="w-12 h-12 rounded-full bg-link-bg-soft flex items-center justify-center text-link">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+              </div>
+              <div class="text-center">
+                <p class="font-sans font-semibold text-sm text-ink">Drop your JSON file here</p>
+                <p class="text-xs text-mute mt-0.5">Supports .json or plain text format</p>
+              </div>
+            </div>
+
+            <!-- Custom Editor container with line numbers -->
+            <div class="flex-1 flex overflow-hidden bg-canvas relative">
+              <!-- Line Numbers Column -->
+              <div id="editor-line-numbers" class="w-10 py-4 font-mono text-[13px] text-mute select-none border-r border-hairline bg-canvas-soft text-right pr-2 leading-6 overflow-hidden">
+                <div>1</div>
+              </div>
+              <!-- Text Area -->
+              <textarea 
+                id="json-input" 
+                class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-transparent"
+                placeholder='Paste or drag raw JSON text here... (e.g. {"status":"secure"})'
+                spellcheck="false"
+              ></textarea>
+            </div>
+            
+            <!-- Error Banner -->
+            <div id="error-banner" class="hidden border-t border-error-soft bg-error-soft/10 text-error px-4 py-3 text-xs flex items-start gap-2.5 transition-all">
+              <svg class="w-4 h-4 text-error shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div class="flex-1">
+                <p class="font-semibold" id="error-title">Syntax Error</p>
+                <p class="text-[11px] mt-0.5" id="error-desc"></p>
+              </div>
+              <button id="btn-fix-error" class="hidden shrink-0 px-2 py-1 rounded bg-error text-[10px] text-white font-medium hover:bg-error-deep cursor-pointer transition-colors">
+                Go to Line
+              </button>
+            </div>
+
+            <!-- Bottom Left Status bar -->
+            <div class="border-t border-hairline px-4 py-2 bg-canvas-soft-2 flex items-center justify-between text-[11px] text-mute font-mono select-none">
+              <span id="editor-stats">Lines: 1 · Chars: 0</span>
+              <span class="text-caption-mono text-mute">JSON Input</span>
+            </div>
+          </div>
+
+          <!-- Right: Output Area -->
+          <div class="flex flex-col relative h-[450px] lg:h-auto min-h-[350px]">
+            
+            <!-- Output Sub Tabs / Controls -->
+            <div class="border-b border-hairline bg-canvas-soft px-4 py-2 flex items-center justify-between text-xs select-none">
+              <!-- Sub Panel selector -->
+              <div class="flex border border-hairline rounded-md bg-canvas overflow-hidden shadow-level-1">
+                <button data-view="formatted" class="output-view-btn px-3 py-1.5 font-medium text-ink bg-canvas-soft-2 transition-colors cursor-pointer border-r border-hairline">Formatted</button>
+                <button data-view="tree" class="output-view-btn px-3 py-1.5 font-medium text-body hover:text-ink transition-colors cursor-pointer border-r border-hairline">Tree View</button>
+                <button data-view="minified" class="output-view-btn px-3 py-1.5 font-medium text-body hover:text-ink transition-colors cursor-pointer">Minified</button>
+              </div>
+
+              <!-- Action buttons -->
+              <div class="flex items-center gap-2">
+                <button id="btn-copy" class="p-1.5 rounded border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink font-medium shadow-level-2 transition-all cursor-pointer" title="Copy output">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-5 4h6m-6 4h6m-2 4h4" />
+                  </svg>
+                </button>
+                <button id="btn-download" class="p-1.5 rounded border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink font-medium shadow-level-2 transition-all cursor-pointer" title="Download formatted file">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Output Search toolbar (conditional - only for Tree view) -->
+            <div id="tree-search-bar" class="hidden border-b border-hairline bg-canvas px-4 py-2 flex items-center justify-between gap-3 select-none">
+              <div class="relative flex-1">
+                <input 
+                  type="text" 
+                  id="tree-search" 
+                  class="w-full pl-7 pr-3 py-1 text-xs rounded border border-hairline bg-canvas-soft focus:outline-none placeholder:text-mute focus:bg-canvas"
+                  placeholder="Filter keys or values..."
+                />
+                <svg class="w-3.5 h-3.5 text-mute absolute left-2 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button id="btn-tree-expand" class="px-2 py-1 rounded border border-hairline text-[10px] font-medium bg-canvas hover:bg-canvas-soft-2 cursor-pointer">Expand All</button>
+                <button id="btn-tree-collapse" class="px-2 py-1 rounded border border-hairline text-[10px] font-medium bg-canvas hover:bg-canvas-soft-2 cursor-pointer">Collapse All</button>
+              </div>
+            </div>
+
+            <!-- Display subviews -->
+            <div class="flex-1 overflow-auto bg-canvas relative p-4" id="output-pane">
+              <!-- Formatted Raw text view -->
+              <pre id="output-formatted" class="font-mono text-[13px] text-ink leading-6 select-all break-all whitespace-pre-wrap"></pre>
+              
+              <!-- Tree view container -->
+              <div id="output-tree" class="hidden font-mono text-[13px] text-ink leading-6 select-none select-tree-container"></div>
+              
+              <!-- Minified text view -->
+              <textarea id="output-minified" class="hidden w-full h-full font-mono text-[13px] text-ink leading-6 bg-transparent border-none focus:outline-none select-all resize-none" readonly></textarea>
+            </div>
+
+            <!-- Bottom Right Status bar -->
+            <div class="border-t border-hairline px-4 py-2 bg-canvas-soft-2 flex items-center justify-between text-[11px] text-mute font-mono select-none">
+              <span id="output-stats">Size: 0 B</span>
+              <span class="text-caption-mono text-mute">JSON Output</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Format button at center bottom -->
+        <div class="border-t border-hairline p-4 bg-canvas flex items-center justify-center gap-4">
+          <button id="btn-format" class="px-6 py-2.5 rounded-full bg-primary hover:opacity-90 text-on-primary font-sans font-semibold text-sm shadow-level-4 transition-all duration-200 cursor-pointer select-none">
+            Beautify JSON
+          </button>
+          <button id="btn-minify" class="px-5 py-2.5 rounded-full bg-canvas border border-hairline hover:bg-canvas-soft-2 text-ink font-sans font-medium text-sm shadow-level-2 transition-all duration-200 cursor-pointer select-none">
+            Minify JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- Panel 2: Diff Compare -->
+      <div id="panel-diff" class="workspace-panel flex-1 flex flex-col hidden">
+        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex items-center justify-between text-xs select-none">
+          <span class="font-sans font-semibold text-body">Side-by-Side JSON Diff Tool</span>
+          <button id="btn-compare" class="px-4 py-1.5 rounded bg-primary hover:opacity-90 text-on-primary font-medium shadow-level-2 transition-all cursor-pointer">
+            Compare JSON
+          </button>
+        </div>
+        
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-hairline min-h-[400px]">
+          <!-- JSON A Input -->
+          <div class="flex flex-col relative h-[300px] lg:h-auto">
+            <textarea 
+              id="diff-input-a" 
+              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas"
+              placeholder='Paste Original JSON A here...'
+              spellcheck="false"
+            ></textarea>
+            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Original JSON A</div>
+          </div>
+          <!-- JSON B Input -->
+          <div class="flex flex-col relative h-[300px] lg:h-auto">
+            <textarea 
+              id="diff-input-b" 
+              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas"
+              placeholder='Paste Modified JSON B here...'
+              spellcheck="false"
+            ></textarea>
+            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Modified JSON B</div>
+          </div>
+        </div>
+
+        <!-- Diff output display -->
+        <div id="diff-output-panel" class="hidden border-t border-hairline bg-canvas-soft flex flex-col flex-1 max-h-[400px]">
+          <div class="border-b border-hairline px-4 py-2 bg-canvas-soft-2 text-xs font-semibold text-body">Comparison Results</div>
+          <div class="flex-1 overflow-auto p-4 font-mono text-[13px] leading-6 bg-canvas" id="diff-output-container">
+            <!-- Diff lines will generate here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3: Converters -->
+      <div id="panel-converters" class="workspace-panel flex-1 flex flex-col hidden">
+        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex items-center justify-between text-xs select-none">
+          <div class="flex items-center gap-3">
+            <span class="font-sans font-semibold text-body">Convert Formats:</span>
+            <select id="converter-select" class="px-2.5 py-1 rounded border border-hairline bg-canvas text-body focus:outline-none cursor-pointer">
+              <option value="json2yaml">JSON to YAML</option>
+              <option value="yaml2json">YAML to JSON</option>
+              <option value="json2xml">JSON to XML</option>
+              <option value="xml2json">XML to JSON</option>
+              <option value="json2csv">JSON to CSV</option>
+              <option value="csv2json">CSV to JSON</option>
+            </select>
+          </div>
+          <button id="btn-convert" class="px-4 py-1.5 rounded bg-primary hover:opacity-90 text-on-primary font-medium shadow-level-2 transition-all cursor-pointer">
+            Run Convert
+          </button>
+        </div>
+
+        <!-- Converter Split screen -->
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-hairline">
+          <!-- Input -->
+          <div class="flex flex-col relative h-[300px] lg:h-auto">
+            <textarea 
+              id="converter-input" 
+              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas"
+              placeholder='Paste input text here...'
+              spellcheck="false"
+            ></textarea>
+            <div id="converter-input-label" class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Source Input</div>
+          </div>
+          <!-- Output -->
+          <div class="flex flex-col relative h-[300px] lg:h-auto">
+            <textarea 
+              id="converter-output" 
+              class="flex-1 p-4 font-mono text-[13px] text-ink leading-6 bg-canvas-soft focus:outline-none resize-none overflow-y-auto leading-6"
+              placeholder='Converted output will appear here...'
+              readonly
+            ></textarea>
+            <div id="converter-output-label" class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Converted Output</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4: Encoder/Decoder -->
+      <div id="panel-encoder" class="workspace-panel flex-1 flex flex-col hidden">
+        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex items-center justify-between text-xs select-none">
+          <div class="flex items-center gap-3">
+            <span class="font-sans font-semibold text-body">Select Operation:</span>
+            <select id="encoder-select" class="px-2.5 py-1 rounded border border-hairline bg-canvas text-body focus:outline-none cursor-pointer">
+              <option value="b64enc">Base64 Encode</option>
+              <option value="b64dec">Base64 Decode</option>
+              <option value="urlenc">URL Encode</option>
+              <option value="urldec">URL Decode</option>
+            </select>
+          </div>
+          <button id="btn-encode" class="px-4 py-1.5 rounded bg-primary hover:opacity-90 text-on-primary font-medium shadow-level-2 transition-all cursor-pointer">
+            Execute
+          </button>
+        </div>
+
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-hairline">
+          <!-- Input -->
+          <div class="flex flex-col relative h-[300px] lg:h-auto">
+            <textarea 
+              id="encoder-input" 
+              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas"
+              placeholder='Paste source text here...'
+              spellcheck="false"
+            ></textarea>
+            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Plain/Encoded Input</div>
+          </div>
+          <!-- Output -->
+          <div class="flex flex-col relative h-[300px] lg:h-auto">
+            <textarea 
+              id="encoder-output" 
+              class="flex-1 p-4 font-mono text-[13px] text-ink leading-6 bg-canvas-soft focus:outline-none resize-none overflow-y-auto leading-6"
+              placeholder='Result will appear here...'
+              readonly
+            ></textarea>
+            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Result Output</div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Collapsible Snippets Sidebar -->
+    <div class="w-full lg:w-72 flex flex-col gap-6">
+      <!-- Info security shield panel -->
+      <div class="bg-canvas border border-hairline shadow-level-3 rounded-xl p-5 flex flex-col gap-3 transition-colors duration-200">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-link-bg-soft flex items-center justify-center text-link">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <span class="font-sans font-semibold text-sm text-ink">100% Client-Side Sandbox</span>
+        </div>
+        <p class="text-xs text-mute leading-relaxed">
+          Online formatters often process data on servers, risking credentials leak. In this sandbox, **all processing happens in your browser locally**. Your content is never transmitted across the network.
+        </p>
+      </div>
+
+      <!-- History Logger -->
+      <div class="bg-canvas border border-hairline shadow-level-3 rounded-xl flex-1 flex flex-col max-h-[400px] lg:max-h-none overflow-hidden transition-colors duration-200">
+        <div class="border-b border-hairline px-5 py-4 bg-canvas-soft-2 flex items-center justify-between select-none">
+          <span class="font-sans font-semibold text-sm text-ink">Recent Snippets</span>
+          <button id="btn-clear-history" class="text-[10px] text-mute hover:text-error transition-colors cursor-pointer">Clear All</button>
+        </div>
+        <!-- History items list -->
+        <div id="history-list" class="flex-1 overflow-y-auto divide-y divide-hairline flex flex-col">
+          <!-- Dynamically populated -->
+          <div class="flex-1 flex items-center justify-center text-xs text-mute py-8 text-center px-4 font-sans select-none">
+            No recent operations. Your formatting operations will be saved locally.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import yaml from 'js-yaml';
+  import { renderJsonTree } from '../utils/TreeViewer.js';
+  import { jsonToXml, xmlToJson } from '../utils/XmlConverter.js';
+
+  // --- Theme/Layout Elements ---
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.workspace-panel');
+  const tabIndicator = document.getElementById('tab-indicator');
+
+  // --- Formatter Elements ---
+  const jsonInput = document.getElementById('json-input') as HTMLTextAreaElement;
+  const lineNumbers = document.getElementById('editor-line-numbers');
+  const indentSelect = document.getElementById('indent-select') as HTMLSelectElement;
+  const errorBanner = document.getElementById('error-banner');
+  const errorTitle = document.getElementById('error-title');
+  const errorDesc = document.getElementById('error-desc');
+  const btnFixError = document.getElementById('btn-fix-error');
+  const statsLabel = document.getElementById('editor-stats');
+  const outputStats = document.getElementById('output-stats');
+  const outputPane = document.getElementById('output-pane');
+  const outputFormatted = document.getElementById('output-formatted');
+  const outputTree = document.getElementById('output-tree');
+  const outputMinified = document.getElementById('output-minified') as HTMLTextAreaElement;
+  
+  const btnFormat = document.getElementById('btn-format');
+  const btnMinify = document.getElementById('btn-minify');
+  const btnClear = document.getElementById('btn-clear');
+  const btnCopy = document.getElementById('btn-copy');
+  const btnDownload = document.getElementById('btn-download');
+  const fileUploader = document.getElementById('file-uploader') as HTMLInputElement;
+  const dropZone = document.getElementById('drop-zone');
+
+  const sampleButtons = document.querySelectorAll('.sample-load-btn');
+  const viewButtons = document.querySelectorAll('.output-view-btn');
+  const treeSearchBar = document.getElementById('tree-search-bar');
+  const treeSearch = document.getElementById('tree-search') as HTMLInputElement;
+  const btnTreeExpand = document.getElementById('btn-tree-expand');
+  const btnTreeCollapse = document.getElementById('btn-tree-collapse');
+
+  // --- Diff Elements ---
+  const diffInputA = document.getElementById('diff-input-a') as HTMLTextAreaElement;
+  const diffInputB = document.getElementById('diff-input-b') as HTMLTextAreaElement;
+  const btnCompare = document.getElementById('btn-compare');
+  const diffOutputPanel = document.getElementById('diff-output-panel');
+  const diffOutputContainer = document.getElementById('diff-output-container');
+
+  // --- Converter Elements ---
+  const converterSelect = document.getElementById('converter-select') as HTMLSelectElement;
+  const converterInput = document.getElementById('converter-input') as HTMLTextAreaElement;
+  const converterOutput = document.getElementById('converter-output') as HTMLTextAreaElement;
+  const btnConvert = document.getElementById('btn-convert');
+  const converterInputLabel = document.getElementById('converter-input-label');
+  const converterOutputLabel = document.getElementById('converter-output-label');
+
+  // --- Encoder/Decoder Elements ---
+  const encoderSelect = document.getElementById('encoder-select') as HTMLSelectElement;
+  const encoderInput = document.getElementById('encoder-input') as HTMLTextAreaElement;
+  const encoderOutput = document.getElementById('encoder-output') as HTMLTextAreaElement;
+  const btnEncode = document.getElementById('btn-encode');
+
+  // --- History Elements ---
+  const historyList = document.getElementById('history-list');
+  const btnClearHistory = document.getElementById('btn-clear-history');
+
+  // State
+  let currentActiveView = 'formatted'; // formatted, tree, minified
+  let parsedJsonCache: any = null;
+  let syntaxErrorLine = -1;
+
+  // Samples mapping
+  const samples = {
+    simple: {
+      name: "Jane Doe Profile",
+      active: true,
+      age: 28,
+      skills: ["JavaScript", "TypeScript", "Astro", "Tailwind CSS"],
+      address: {
+        city: "San Francisco",
+        state: "CA"
+      }
+    },
+    nested: [
+      {
+        id: 1,
+        title: "Vercel Hoodie",
+        price: 65.0,
+        tags: ["apparel", "gear"],
+        inStock: true
+      },
+      {
+        id: 2,
+        title: "Geist Keycap Set",
+        price: 120.5,
+        tags: ["electronics", "keyboard"],
+        inStock: false
+      }
+    ],
+    config: {
+      server: {
+        host: "127.0.0.1",
+        port: 8080,
+        ssl: false
+      },
+      database: {
+        client: "postgresql",
+        connection: {
+          database: "production_db",
+          user: "postgres",
+          password: "super-secure-password-123"
+        },
+        pool: {
+          min: 2,
+          max: 10
+        }
+      },
+      features: {
+        websockets: true,
+        cache: "redis"
+      }
+    }
+  };
+
+  // --- 1. Tab Navigation Routing ---
+  const initializeTabs = () => {
+    // Set initial position of tab indicator line
+    const activeTab = document.querySelector('.tab-btn.text-link') as HTMLElement;
+    if (activeTab && tabIndicator) {
+      tabIndicator.style.width = `${activeTab.offsetWidth}px`;
+      tabIndicator.style.left = `${activeTab.offsetLeft}px`;
+    }
+  };
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetPanelId = btn.getAttribute('data-target');
+      
+      // Update styling
+      tabButtons.forEach(b => {
+        b.classList.remove('text-link', 'border-link');
+        b.classList.add('text-body', 'border-transparent');
+      });
+      btn.classList.add('text-link', 'border-link');
+      btn.classList.remove('text-body', 'border-transparent');
+
+      // Sync active sliding bar
+      if (tabIndicator) {
+        tabIndicator.style.width = `${(btn as HTMLElement).offsetWidth}px`;
+        tabIndicator.style.left = `${(btn as HTMLElement).offsetLeft}px`;
+      }
+
+      // Hide all panels, show target
+      panels.forEach(panel => {
+        if (panel.id === targetPanelId) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  window.addEventListener('resize', initializeTabs);
+  setTimeout(initializeTabs, 100);
+
+  // --- 2. Code Editor Sync & Line Numbers ---
+  const updateLineCounter = () => {
+    if (!jsonInput || !lineNumbers) return;
+    const value = jsonInput.value;
+    const lines = value.split('\n');
+    const lineCount = lines.length;
+
+    let lineNumbersHtml = '';
+    for (let i = 1; i <= lineCount; i++) {
+      lineNumbersHtml += `<div class="h-6 pr-1">${i}</div>`;
+    }
+    lineNumbers.innerHTML = lineNumbersHtml;
+    
+    // Update chars count
+    if (statsLabel) {
+      statsLabel.textContent = `Lines: ${lineCount} · Chars: ${value.length}`;
+    }
+  };
+
+  jsonInput?.addEventListener('input', updateLineCounter);
+  jsonInput?.addEventListener('scroll', () => {
+    if (lineNumbers && jsonInput) {
+      lineNumbers.scrollTop = jsonInput.scrollTop;
+    }
+  });
+
+  // --- 3. Format/Minify Core Logic ---
+  const formatJSON = (logHistory = true) => {
+    const rawVal = jsonInput.value.trim();
+    if (!rawVal) {
+      clearOutput();
+      return;
+    }
+
+    try {
+      // Clean up error state
+      hideError();
+
+      // Parse JSON
+      const parsed = JSON.parse(rawVal);
+      parsedJsonCache = parsed;
+
+      // Formatting parameters
+      const indentVal = indentSelect.value;
+      const spaceVal = indentVal === 'tab' ? '\t' : parseInt(indentVal, 10);
+      
+      // Generate formats
+      const prettyText = JSON.stringify(parsed, null, spaceVal);
+      const minifiedText = JSON.stringify(parsed);
+
+      // Render output text boxes
+      if (outputFormatted) outputFormatted.textContent = prettyText;
+      if (outputMinified) outputMinified.value = minifiedText;
+
+      // Update statistics
+      const byteSize = new Blob([prettyText]).size;
+      const formattedSize = byteSize > 1024 ? `${(byteSize / 1024).toFixed(2)} KB` : `${byteSize} B`;
+      if (outputStats) {
+        outputStats.textContent = `Size: ${formattedSize}`;
+      }
+
+      // Render tree hierarchy
+      renderTree();
+
+      // Log into history
+      if (logHistory) {
+        saveHistoryItem(rawVal);
+      }
+    } catch (err: any) {
+      // Find line number and column number from error
+      parseAndShowError(rawVal, err);
+      parsedJsonCache = null;
+    }
+  };
+
+  const minifyJSON = () => {
+    const rawVal = jsonInput.value.trim();
+    if (!rawVal) return;
+
+    try {
+      hideError();
+      const parsed = JSON.parse(rawVal);
+      const minifiedText = JSON.stringify(parsed);
+      
+      if (outputMinified) outputMinified.value = minifiedText;
+      if (outputFormatted) outputFormatted.textContent = minifiedText;
+      
+      // Update subview to formatted or minified
+      switchSubView('minified');
+      
+      // Statistics
+      const byteSize = new Blob([minifiedText]).size;
+      const formattedSize = byteSize > 1024 ? `${(byteSize / 1024).toFixed(2)} KB` : `${byteSize} B`;
+      if (outputStats) outputStats.textContent = `Size: ${formattedSize}`;
+
+      saveHistoryItem(rawVal);
+    } catch (err: any) {
+      parseAndShowError(rawVal, err);
+    }
+  };
+
+  const clearOutput = () => {
+    if (outputFormatted) outputFormatted.textContent = '';
+    if (outputTree) outputTree.innerHTML = '';
+    if (outputMinified) outputMinified.value = '';
+    if (outputStats) outputStats.textContent = 'Size: 0 B';
+    parsedJsonCache = null;
+  };
+
+  const hideError = () => {
+    errorBanner?.classList.add('hidden');
+    syntaxErrorLine = -1;
+    btnFixError?.classList.add('hidden');
+  };
+
+  const parseAndShowError = (input: string, err: Error) => {
+    errorBanner?.classList.remove('hidden');
+    errorTitle!.textContent = "Invalid JSON structure";
+    
+    let message = err.message;
+    let line = -1;
+    let col = -1;
+
+    // Standard V8 Error Parsing: "Unexpected token } in JSON at position 156"
+    // Or Safari error: "JSON.parse: unexpected character at line 4 column 12 of the JSON data"
+    const posMatch = message.match(/position (\d+)/i);
+    const lineColMatch = message.match(/line (\d+) column (\d+)/i);
+
+    if (lineColMatch) {
+      line = parseInt(lineColMatch[1], 10);
+      col = parseInt(lineColMatch[2], 10);
+    } else if (posMatch) {
+      const pos = parseInt(posMatch[1], 10);
+      const beforePos = input.slice(0, pos);
+      const lines = beforePos.split('\n');
+      line = lines.length;
+      col = lines[lines.length - 1].length + 1;
+    }
+
+    if (line > 0) {
+      errorDesc!.textContent = `${message} (at Line ${line}, Column ${col})`;
+      syntaxErrorLine = line;
+      btnFixError?.classList.remove('hidden');
+    } else {
+      errorDesc!.textContent = message;
+      btnFixError?.classList.add('hidden');
+    }
+  };
+
+  // Click on error fixing scrolls editor directly to line
+  btnFixError?.addEventListener('click', () => {
+    if (syntaxErrorLine <= 0 || !jsonInput) return;
+    
+    const lines = jsonInput.value.split('\n');
+    let offset = 0;
+    for (let i = 0; i < syntaxErrorLine - 1; i++) {
+      offset += lines[i].length + 1;
+    }
+    
+    jsonInput.focus();
+    jsonInput.setSelectionRange(offset, offset + (lines[syntaxErrorLine - 1] || '').length);
+    
+    // Approximate scroll calculation
+    const lineHeightPx = 24; // text-[13px] leading-6 is roughly 24px
+    jsonInput.scrollTop = (syntaxErrorLine - 1) * lineHeightPx;
+  });
+
+  btnFormat?.addEventListener('click', () => formatJSON(true));
+  btnMinify?.addEventListener('click', minifyJSON);
+  
+  btnClear?.addEventListener('click', () => {
+    if (jsonInput) jsonInput.value = '';
+    updateLineCounter();
+    clearOutput();
+    hideError();
+  });
+
+  // --- 4. Sub-view switching (Formatted, Tree View, Minified) ---
+  const switchSubView = (viewName: string) => {
+    currentActiveView = viewName;
+    
+    // Update toggles styling
+    viewButtons.forEach(btn => {
+      const btnView = btn.getAttribute('data-view');
+      if (btnView === viewName) {
+        btn.classList.add('bg-canvas-soft-2', 'text-ink');
+        btn.classList.remove('text-body');
+      } else {
+        btn.classList.remove('bg-canvas-soft-2', 'text-ink');
+        btn.classList.add('text-body');
+      }
+    });
+
+    // Toggle panels
+    if (viewName === 'formatted') {
+      outputFormatted?.classList.remove('hidden');
+      outputTree?.classList.add('hidden');
+      outputMinified?.classList.add('hidden');
+      treeSearchBar?.classList.add('hidden');
+    } else if (viewName === 'tree') {
+      outputFormatted?.classList.add('hidden');
+      outputTree?.classList.remove('hidden');
+      outputMinified?.classList.add('hidden');
+      treeSearchBar?.classList.remove('hidden');
+      renderTree();
+    } else if (viewName === 'minified') {
+      outputFormatted?.classList.add('hidden');
+      outputTree?.classList.add('hidden');
+      outputMinified?.classList.remove('hidden');
+      treeSearchBar?.classList.add('hidden');
+    }
+  };
+
+  viewButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const viewName = btn.getAttribute('data-view');
+      if (viewName) switchSubView(viewName);
+    });
+  });
+
+  // --- 5. Tree View Renderer and Search Filter ---
+  const renderTree = () => {
+    if (!outputTree || !parsedJsonCache) {
+      if (outputTree) outputTree.innerHTML = '<span class="text-mute italic">Load or type valid JSON above.</span>';
+      return;
+    }
+
+    const searchTerm = treeSearch ? treeSearch.value : '';
+    outputTree.innerHTML = renderJsonTree(parsedJsonCache, searchTerm);
+    
+    // Register collapses click triggers (event delegation)
+    setupTreeCollapseListeners();
+  };
+
+  const setupTreeCollapseListeners = () => {
+    if (!outputTree) return;
+    
+    // Caret toggles
+    const carets = outputTree.querySelectorAll('.tree-caret');
+    carets.forEach(caret => {
+      caret.parentElement?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        const groupNode = caret.closest('.tree-group');
+        const children = groupNode?.querySelector('.tree-children');
+        const footer = groupNode?.querySelector('.tree-footer');
+        
+        if (children) {
+          if (children.classList.contains('hidden')) {
+            children.classList.remove('hidden');
+            footer?.classList.remove('hidden');
+            caret.classList.add('rotate-90');
+          } else {
+            children.classList.add('hidden');
+            footer?.classList.add('hidden');
+            caret.classList.remove('rotate-90');
+          }
+        }
+      });
+    });
+
+    // Copy Path click triggers
+    const pathButtons = outputTree.querySelectorAll('.copy-path-btn');
+    pathButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const path = btn.getAttribute('data-path') || '';
+        navigator.clipboard.writeText(path).then(() => {
+          const originalText = btn.textContent;
+          btn.textContent = 'Copied!';
+          btn.classList.add('text-success');
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('text-success');
+          }, 1000);
+        });
+      });
+    });
+  };
+
+  treeSearch?.addEventListener('input', () => {
+    renderTree();
+  });
+
+  btnTreeExpand?.addEventListener('click', () => {
+    if (!outputTree) return;
+    const collapsedChildren = outputTree.querySelectorAll('.tree-children.hidden');
+    collapsedChildren.forEach(child => child.classList.remove('hidden'));
+    
+    const collapsedFooters = outputTree.querySelectorAll('.tree-footer.hidden');
+    collapsedFooters.forEach(foot => foot.classList.remove('hidden'));
+    
+    const carets = outputTree.querySelectorAll('.tree-caret:not(.rotate-90)');
+    carets.forEach(caret => caret.classList.add('rotate-90'));
+  });
+
+  btnTreeCollapse?.addEventListener('click', () => {
+    if (!outputTree) return;
+    // We target inner nested children to collapse them, leaving root level visible or collapse everything
+    const children = outputTree.querySelectorAll('.tree-children');
+    children.forEach(child => child.classList.add('hidden'));
+    
+    const footers = outputTree.querySelectorAll('.tree-footer');
+    footers.forEach(foot => foot.classList.add('hidden'));
+    
+    const carets = outputTree.querySelectorAll('.tree-caret.rotate-90');
+    carets.forEach(caret => caret.classList.remove('rotate-90'));
+  });
+
+  // --- 6. Upload & Drag and Drop File ---
+  const loadTextIntoEditor = (text: string) => {
+    if (jsonInput) {
+      jsonInput.value = text;
+      updateLineCounter();
+      formatJSON(true);
+    }
+  };
+
+  fileUploader?.addEventListener('change', (e) => {
+    const file = fileUploader.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const text = evt.target?.result as string;
+      loadTextIntoEditor(text);
+    };
+    reader.readAsText(file);
+  });
+
+  // Drag and Drop
+  jsonInput?.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    dropZone?.classList.remove('hidden');
+    dropZone?.classList.add('flex');
+  });
+
+  dropZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+
+  dropZone?.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dropZone?.classList.add('hidden');
+    dropZone?.classList.remove('flex');
+  });
+
+  dropZone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone?.classList.add('hidden');
+    dropZone?.classList.remove('flex');
+
+    const file = e.dataTransfer?.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const text = evt.target?.result as string;
+        loadTextIntoEditor(text);
+      };
+      reader.readAsText(file);
+    }
+  });
+
+  // --- 7. Load Samples ---
+  sampleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sampleKey = btn.getAttribute('data-sample');
+      if (sampleKey === 'simple' || sampleKey === 'nested' || sampleKey === 'config') {
+        const data = samples[sampleKey];
+        loadTextIntoEditor(JSON.stringify(data, null, 4));
+      }
+    });
+  });
+
+  // --- 8. Copy and Download Triggers ---
+  btnCopy?.addEventListener('click', () => {
+    let textToCopy = '';
+    if (currentActiveView === 'formatted') {
+      textToCopy = outputFormatted?.textContent || '';
+    } else if (currentActiveView === 'minified') {
+      textToCopy = outputMinified?.value || '';
+    } else {
+      textToCopy = JSON.stringify(parsedJsonCache, null, 2);
+    }
+
+    if (!textToCopy) return;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      // Visual feedback
+      const originalSvg = btnCopy.innerHTML;
+      btnCopy.innerHTML = `
+        <svg class="w-3.5 h-3.5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      `;
+      setTimeout(() => {
+        btnCopy.innerHTML = originalSvg;
+      }, 1500);
+    });
+  });
+
+  btnDownload?.addEventListener('click', () => {
+    let content = '';
+    let ext = 'json';
+
+    if (currentActiveView === 'formatted') {
+      content = outputFormatted?.textContent || '';
+    } else if (currentActiveView === 'minified') {
+      content = outputMinified?.value || '';
+      ext = 'min.json';
+    } else {
+      content = JSON.stringify(parsedJsonCache, null, 2);
+    }
+
+    if (!content) return;
+
+    const blob = new Blob([content], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `formatted-json-${Date.now()}.${ext}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  });
+
+  // --- 9. LCS Diff Tool Engine ---
+  const calculateLcsDiff = (text1: string, text2: string) => {
+    const a = text1.split('\n');
+    const b = text2.split('\n');
+    const n = a.length;
+    const m = b.length;
+    
+    // DP array size optimization: use 2D array since lengths are reasonable
+    const dp = Array(n + 1).fill(0).map(() => Array(m + 1).fill(0));
+    
+    for (let i = 1; i <= n; i++) {
+      for (let j = 1; j <= m; j++) {
+        if (a[i - 1] === b[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+    }
+    
+    let i = n, j = m;
+    const diff = [];
+    
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && a[i - 1] === b[j - 1]) {
+        diff.push({ type: 'normal', val: a[i - 1], lineA: i, lineB: j });
+        i--;
+        j--;
+      } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+        diff.push({ type: 'added', val: b[j - 1], lineA: null, lineB: j });
+        j--;
+      } else if (i > 0 && (j === 0 || dp[i][j - 1] < dp[i - 1][j])) {
+        diff.push({ type: 'removed', val: a[i - 1], lineA: i, lineB: null });
+        i--;
+      }
+    }
+    
+    return diff.reverse();
+  };
+
+  btnCompare?.addEventListener('click', () => {
+    const aRaw = diffInputA.value.trim();
+    const bRaw = diffInputB.value.trim();
+
+    if (!aRaw || !bRaw) {
+      alert("Please populate both JSON A and JSON B boxes first.");
+      return;
+    }
+
+    let aPretty = aRaw;
+    let bPretty = bRaw;
+
+    // Pre-format both if they are valid JSON objects to ensure we don't diff whitespace
+    try {
+      aPretty = JSON.stringify(JSON.parse(aRaw), null, 2);
+    } catch (e) {}
+    try {
+      bPretty = JSON.stringify(JSON.parse(bRaw), null, 2);
+    } catch (e) {}
+
+    const diffResults = calculateLcsDiff(aPretty, bPretty);
+    
+    // Clear & display
+    if (diffOutputContainer && diffOutputPanel) {
+      diffOutputPanel.classList.remove('hidden');
+      
+      let html = '';
+      diffResults.forEach(item => {
+        let bgClass = 'text-ink';
+        let prefix = ' ';
+        
+        if (item.type === 'added') {
+          bgClass = 'bg-green-100/50 dark:bg-green-950/30 text-green-700 dark:text-green-400 font-semibold';
+          prefix = '+';
+        } else if (item.type === 'removed') {
+          bgClass = 'bg-red-100/50 dark:bg-red-950/30 text-red-600 dark:text-red-400 line-through';
+          prefix = '-';
+        }
+        
+        const lineNumA = item.lineA !== null ? String(item.lineA).padStart(3, ' ') : '   ';
+        const lineNumB = item.lineB !== null ? String(item.lineB).padStart(3, ' ') : '   ';
+        
+        html += `<div class="flex select-all px-2 ${bgClass} hover:bg-canvas-soft-2 transition-colors">`;
+        html += `<span class="text-mute select-none border-r border-hairline pr-2 mr-2 text-[11px] font-sans shrink-0">${lineNumA} ➔ ${lineNumB}</span>`;
+        html += `<span class="select-none font-bold mr-2 text-mute shrink-0">${prefix}</span>`;
+        html += `<span class="break-all whitespace-pre-wrap">${escapeHtml(item.val)}</span>`;
+        html += `</div>`;
+      });
+
+      diffOutputContainer.innerHTML = html;
+      
+      // Auto scroll to results
+      diffOutputPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  // --- 10. Converters (JSON ↔ YAML/XML/CSV) ---
+  const updateConverterLabels = () => {
+    const selection = converterSelect.value;
+    if (selection === 'json2yaml') {
+      converterInputLabel!.textContent = 'Raw JSON Input';
+      converterOutputLabel!.textContent = 'YAML Output';
+      converterInput.placeholder = '{\n  "name": "Jane"\n}';
+    } else if (selection === 'yaml2json') {
+      converterInputLabel!.textContent = 'YAML Input';
+      converterOutputLabel!.textContent = 'JSON Output';
+      converterInput.placeholder = 'name: Jane\nage: 28';
+    } else if (selection === 'json2xml') {
+      converterInputLabel!.textContent = 'Raw JSON Input';
+      converterOutputLabel!.textContent = 'XML Output';
+      converterInput.placeholder = '{\n  "name": "Jane"\n}';
+    } else if (selection === 'xml2json') {
+      converterInputLabel!.textContent = 'XML Input';
+      converterOutputLabel!.textContent = 'JSON Output';
+      converterInput.placeholder = '<root>\n  <name>Jane</name>\n</root>';
+    } else if (selection === 'json2csv') {
+      converterInputLabel!.textContent = 'Raw JSON Array Input';
+      converterOutputLabel!.textContent = 'CSV Output';
+      converterInput.placeholder = '[\n  {"id":1, "name":"Jane"},\n  {"id":2, "name":"John"}\n]';
+    } else if (selection === 'csv2json') {
+      converterInputLabel!.textContent = 'CSV Input';
+      converterOutputLabel!.textContent = 'JSON Output';
+      converterInput.placeholder = 'id,name\n1,Jane\n2,John';
+    }
+  };
+
+  converterSelect?.addEventListener('change', updateConverterLabels);
+  updateConverterLabels();
+
+  btnConvert?.addEventListener('click', () => {
+    const val = converterInput.value.trim();
+    const mode = converterSelect.value;
+
+    if (!val) {
+      converterOutput.value = '';
+      return;
+    }
+
+    try {
+      if (mode === 'json2yaml') {
+        const parsed = JSON.parse(val);
+        converterOutput.value = yaml.dump(parsed);
+      } else if (mode === 'yaml2json') {
+        const parsed = yaml.load(val);
+        converterOutput.value = JSON.stringify(parsed, null, 2);
+      } else if (mode === 'json2xml') {
+        const parsed = JSON.parse(val);
+        // XML Root wrap
+        converterOutput.value = '<?xml version="1.0" encoding="UTF-8"?>\n' + jsonToXml(parsed, 'root');
+      } else if (mode === 'xml2json') {
+        converterOutput.value = xmlToJson(val);
+      } else if (mode === 'json2csv') {
+        const parsed = JSON.parse(val);
+        converterOutput.value = convertJsonToCsv(parsed);
+      } else if (mode === 'csv2json') {
+        converterOutput.value = convertCsvToJson(val);
+      }
+    } catch (err: any) {
+      converterOutput.value = `Error: ${err.message}`;
+    }
+  });
+
+  // CSV Conversion Helpers
+  const convertJsonToCsv = (obj: any): string => {
+    const arr = Array.isArray(obj) ? obj : [obj];
+    if (arr.length === 0) return '';
+    
+    // Extract headers (keys from all elements to handle missing parameters)
+    const headersSet = new Set<string>();
+    arr.forEach(item => {
+      Object.keys(item).forEach(k => headersSet.add(k));
+    });
+    const headers = Array.from(headersSet);
+
+    let csv = headers.join(',') + '\n';
+    
+    arr.forEach(row => {
+      const values = headers.map(header => {
+        const val = row[header];
+        if (val === undefined || val === null) return '';
+        
+        // Escape quotes
+        let strVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
+        if (strVal.includes(',') || strVal.includes('"') || strVal.includes('\n')) {
+          strVal = `"${strVal.replace(/"/g, '""')}"`;
+        }
+        return strVal;
+      });
+      csv += values.join(',') + '\n';
+    });
+
+    return csv;
+  };
+
+  const convertCsvToJson = (csv: string): string => {
+    const lines = csv.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    if (lines.length === 0) return '[]';
+
+    // Parse header
+    const headers = splitCsvLine(lines[0]);
+    const list = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const cells = splitCsvLine(lines[i]);
+      const item: any = {};
+      headers.forEach((h, index) => {
+        const cellVal = cells[index] || '';
+        // Type coerce
+        if (cellVal.toLowerCase() === 'true') item[h] = true;
+        else if (cellVal.toLowerCase() === 'false') item[h] = false;
+        else if (cellVal.toLowerCase() === 'null') item[h] = null;
+        else if (!isNaN(Number(cellVal)) && cellVal !== '') item[h] = Number(cellVal);
+        else item[h] = cellVal;
+      });
+      list.push(item);
+    }
+
+    return JSON.stringify(list, null, 2);
+  };
+
+  // Helper to split CSV line keeping quoted items grouped
+  const splitCsvLine = (line: string): string[] => {
+    const result = [];
+    let cell = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      if (char === '"') {
+        if (inQuotes && line[i + 1] === '"') {
+          // Double quotes inside quotes
+          cell += '"';
+          i++; // skip next quote
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        result.push(cell.trim());
+        cell = '';
+      } else {
+        cell += char;
+      }
+    }
+    result.push(cell.trim());
+    return result;
+  };
+
+  // --- 11. Base64 & URL Encoding Tools ---
+  btnEncode?.addEventListener('click', () => {
+    const val = encoderInput.value;
+    const mode = encoderSelect.value;
+
+    if (!val) {
+      encoderOutput.value = '';
+      return;
+    }
+
+    try {
+      if (mode === 'b64enc') {
+        // Handle unicode correctly using encodeURIComponent
+        encoderOutput.value = btoa(encodeURIComponent(val).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+          return String.fromCharCode(parseInt(p1, 16));
+        }));
+      } else if (mode === 'b64dec') {
+        encoderOutput.value = decodeURIComponent(atob(val).split('').map(c => {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+      } else if (mode === 'urlenc') {
+        encoderOutput.value = encodeURIComponent(val);
+      } else if (mode === 'urldec') {
+        encoderOutput.value = decodeURIComponent(val);
+      }
+    } catch (err: any) {
+      encoderOutput.value = `Conversion Error: ${err.message}`;
+    }
+  });
+
+  // --- 12. Local Snippets History ---
+  const saveHistoryItem = (jsonStr: string) => {
+    if (!localStorage) return;
+    
+    try {
+      const history = getLocalHistory();
+      
+      // Limit snippet saving length
+      const snippetShort = jsonStr.length > 500 ? jsonStr.slice(0, 500) + '...' : jsonStr;
+      
+      // Avoid duplicate inputs
+      const isDuplicate = history.some(item => item.raw === jsonStr);
+      if (isDuplicate) return;
+
+      const newItem = {
+        id: Date.now(),
+        raw: jsonStr,
+        preview: snippetShort,
+        size: jsonStr.length,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      // Add to start, slice limit to 10
+      history.unshift(newItem);
+      const trimmedHistory = history.slice(0, 10);
+      
+      localStorage.setItem('json_history', JSON.stringify(trimmedHistory));
+      renderHistory();
+    } catch (e) {
+      console.warn("Storage quota exceeded, history logging failed.");
+    }
+  };
+
+  const getLocalHistory = (): any[] => {
+    if (!localStorage) return [];
+    const saved = localStorage.getItem('json_history');
+    return saved ? JSON.parse(saved) : [];
+  };
+
+  const renderHistory = () => {
+    if (!historyList) return;
+    const history = getLocalHistory();
+
+    if (history.length === 0) {
+      historyList.innerHTML = `
+        <div class="flex-1 flex items-center justify-center text-xs text-mute py-8 text-center px-4 font-sans select-none">
+          No recent operations. Your formatting operations will be saved locally.
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    history.forEach(item => {
+      // Escape preview for display
+      const safePreview = escapeHtml(item.preview.replace(/\s+/g, ' '));
+      const sizeStr = item.size > 1024 ? `${(item.size / 1024).toFixed(1)} KB` : `${item.size} B`;
+      
+      html += `
+        <div class="p-3.5 hover:bg-canvas-soft-2 transition-colors flex flex-col gap-1.5 cursor-pointer relative group/item" data-id="${item.id}">
+          <div class="flex items-center justify-between text-[10px] font-mono text-mute select-none">
+            <span>${item.time}</span>
+            <span>${sizeStr}</span>
+          </div>
+          <p class="text-[11px] font-mono text-body truncate break-all pr-5">${safePreview}</p>
+          
+          <!-- Quick actions -->
+          <button class="delete-history-btn absolute right-2.5 top-1/2 -translate-y-1/2 opacity-0 group-hover/item:opacity-100 p-1 rounded hover:bg-canvas-soft text-mute hover:text-error transition-all cursor-pointer" data-id="${item.id}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+      `;
+    });
+
+    historyList.innerHTML = html;
+
+    // Attach click listeners
+    const items = historyList.querySelectorAll('[data-id]');
+    items.forEach(item => {
+      item.addEventListener('click', (e) => {
+        // Prevent trigger on delete click
+        if ((e.target as HTMLElement).closest('.delete-history-btn')) return;
+        
+        const id = parseInt(item.getAttribute('data-id') || '', 10);
+        const match = history.find(h => h.id === id);
+        if (match) {
+          loadTextIntoEditor(match.raw);
+        }
+      });
+    });
+
+    // Attach delete listeners
+    const deleteButtons = historyList.querySelectorAll('.delete-history-btn');
+    deleteButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = parseInt(btn.getAttribute('data-id') || '', 10);
+        deleteHistoryItem(id);
+      });
+    });
+  };
+
+  const deleteHistoryItem = (id: number) => {
+    let history = getLocalHistory();
+    history = history.filter(h => h.id !== id);
+    localStorage.setItem('json_history', JSON.stringify(history));
+    renderHistory();
+  };
+
+  btnClearHistory?.addEventListener('click', () => {
+    localStorage.removeItem('json_history');
+    renderHistory();
+  });
+
+  // Run on mount
+  renderHistory();
+
+  // Load initial URL parameters if they exist
+  // Handles ?url=https://api.github.com
+  const handleUrlParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    const targetUrl = params.get('url');
+    if (targetUrl) {
+      // Pre-populate message
+      if (jsonInput) jsonInput.value = `// Fetching data from: ${targetUrl}...\n`;
+      updateLineCounter();
+      
+      fetch(targetUrl)
+        .then(res => res.text())
+        .then(text => {
+          loadTextIntoEditor(text);
+        })
+        .catch(err => {
+          if (jsonInput) jsonInput.value = `// Fetching failed:\n// ${err.message}\n`;
+          updateLineCounter();
+        });
+    }
+  };
+
+  handleUrlParams();
+
+  // Handle privacy policy popup links
+  const modalPrivacyBtn = document.getElementById('footer-privacy-btn');
+  const modalHowBtn = document.getElementById('footer-how-btn');
+  
+  modalPrivacyBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    alert("Privacy Audit:\n1. 100% Offline execution: No third-party network APIs are called.\n2. Zero telemetry: No GA tags, cookies, or metadata scripts.\n3. Source Inspection: Standard browser DOMParser and client bundlers execute everything locally.");
+  });
+
+  modalHowBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    alert("How it Works:\n- File inputs are parsed inside the local JS engine using native JSON.parse().\n- Custom Tree structure uses DOM string injections.\n- XML conversions run on browser DOMParser.\n- YAML conversions load client-side js-yaml modules.");
+  });
+</script>

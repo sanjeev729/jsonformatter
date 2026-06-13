@@ -1,0 +1,1 @@
+Always use Astro, Tailwind CSS, and Web Design Guidelines for this project. Always follow the design language described in DESIGN.md.

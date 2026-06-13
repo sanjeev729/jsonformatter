@@ -1,0 +1,249 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand & Accent Colors */
+  --color-primary: #171717;
+  --color-on-primary: #ffffff;
+  --color-ink: #171717;
+  --color-body: #4d4d4d;
+  --color-mute: #888888;
+  
+  /* Borders */
+  --color-hairline: #ebebeb;
+  --color-hairline-strong: #a1a1a1;
+  
+  /* Canvas (Backgrounds) */
+  --color-canvas: #ffffff;
+  --color-canvas-soft: #fafafa;
+  --color-canvas-soft-2: #f5f5f5;
+  
+  /* Accent/Semantic Colors */
+  --color-link: #0070f3;
+  --color-link-deep: #0761d1;
+  --color-link-bg-soft: #d3e5ff;
+  --color-success: #0070f3;
+  --color-error: #ee0000;
+  --color-error-soft: #f7d4d6;
+  --color-error-deep: #c50000;
+  --color-warning: #f5a623;
+  --color-warning-soft: #ffefcf;
+  --color-warning-deep: #ab570a;
+  --color-violet: #7928ca;
+  --color-violet-soft: #d8ccf1;
+  --color-violet-deep: #4c2889;
+  --color-cyan: #50e3c2;
+  --color-cyan-soft: #aaffec;
+  --color-cyan-deep: #29bc9b;
+  --color-highlight-pink: #ff0080;
+  --color-highlight-magenta: #eb367f;
+
+  /* Typography Fonts */
+  --font-sans: "Inter", "Geist", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  
+  /* Radii scale matching DESIGN.md */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill-sm: 64px;
+  --radius-pill: 100px;
+}
+
+/* Base resets & transitions */
+html, body {
+  font-family: var(--font-sans);
+  background-color: var(--color-canvas-soft);
+  color: var(--color-ink);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+}
+
+/* Dark mode token overrides (Vercel-inspired dark mode) */
+.dark {
+  --color-primary: #ffffff;
+  --color-on-primary: #171717;
+  --color-ink: #ededed;
+  --color-body: #a1a1a1;
+  --color-mute: #666666;
+  
+  --color-hairline: #2e2e2e;
+  --color-hairline-strong: #444444;
+  
+  --color-canvas: #0a0a0a;
+  --color-canvas-soft: #000000;
+  --color-canvas-soft-2: #141414;
+  
+  --color-link: #3291ff;
+  --color-link-deep: #0070f3;
+  --color-link-bg-soft: #002554;
+  
+  --color-error: #ff0000;
+  --color-error-soft: #4c0000;
+  --color-error-deep: #ee0000;
+  
+  --color-warning: #f7b955;
+  --color-warning-soft: #4c2c00;
+  --color-warning-deep: #f5a623;
+}
+
+/* Custom Utilities */
+@utility text-display-xl {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 48px;
+  letter-spacing: -2.4px;
+}
+
+@utility text-display-lg {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 40px;
+  letter-spacing: -1.28px;
+}
+
+@utility text-display-md {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  letter-spacing: -0.96px;
+}
+
+@utility text-display-sm {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.6px;
+}
+
+@utility text-caption-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+@utility text-code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+/* Custom UI shadows based on stacked offsets in DESIGN.md */
+@utility shadow-level-1 {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+.dark .shadow-level-1 {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+@utility shadow-level-2 {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 2px 2px rgba(0, 0, 0, 0.04);
+}
+.dark .shadow-level-2 {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.4);
+}
+
+@utility shadow-level-3 {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 8px -8px rgba(0, 0, 0, 0.04);
+}
+.dark .shadow-level-3 {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0px 2px 2px rgba(0, 0, 0, 0.2), 0px 8px 8px -8px rgba(0, 0, 0, 0.4);
+}
+
+@utility shadow-level-4 {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 16px -4px rgba(0, 0, 0, 0.04);
+}
+.dark .shadow-level-4 {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0px 2px 2px rgba(0, 0, 0, 0.2), 0px 8px 16px -4px rgba(0, 0, 0, 0.4);
+}
+
+@utility shadow-level-5 {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0px 24px 32px -8px rgba(0, 0, 0, 0.06);
+}
+.dark .shadow-level-5 {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 8px 16px -4px rgba(0, 0, 0, 0.4), 0px 24px 32px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* Ambient Ambient Gradient Mesh animations */
+@keyframes ambient-mesh {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@utility animate-mesh-1 {
+  animation: ambient-mesh 20s infinite alternate ease-in-out;
+}
+
+@utility animate-mesh-2 {
+  animation: ambient-mesh 25s infinite alternate-reverse ease-in-out;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline-strong);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-mute);
+}
+
+/* Code highlight classes for line highlighting / error marking */
+.editor-error-line {
+  background-color: rgba(238, 0, 0, 0.1);
+  border-left: 2px solid var(--color-error);
+}
+
+/* Tree view styling */
+.tree-node-key {
+  color: #0070f3;
+}
+.dark .tree-node-key {
+  color: #3291ff;
+}
+
+.tree-node-string {
+  color: #02824c;
+}
+.dark .tree-node-string {
+  color: #40c463;
+}
+
+.tree-node-number {
+  color: #a05e00;
+}
+.dark .tree-node-number {
+  color: #f5a623;
+}
+
+.tree-node-boolean {
+  color: #7928ca;
+}
+.dark .tree-node-boolean {
+  color: #d8ccf1;
+}
+
+.tree-node-null {
+  color: #888888;
+}
