@@ -53,14 +53,14 @@
               Upload JSON
             </label>
             <!-- Sample JSON -->
-            <div class="relative group/sample">
-              <button class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body font-medium shadow-level-2 transition-all cursor-pointer flex items-center gap-1">
+            <div class="relative" id="sample-dropdown-wrapper">
+              <button id="btn-sample-toggle" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body font-medium shadow-level-2 transition-all cursor-pointer flex items-center gap-1">
                 Load Sample
-                <svg class="w-3 h-3 text-mute" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <svg class="w-3 h-3 text-mute transition-transform duration-200" id="sample-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div class="absolute left-0 mt-1 hidden group-hover/sample:block w-40 rounded-lg border border-hairline bg-canvas shadow-level-5 py-1 z-30">
+              <div id="sample-dropdown-menu" class="absolute left-0 top-full mt-1 hidden w-40 rounded-lg border border-hairline bg-canvas shadow-level-5 py-1 z-30">
                 <button data-sample="simple" class="sample-load-btn w-full px-3 py-1.5 text-left hover:bg-canvas-soft-2 transition-colors cursor-pointer">Simple Object</button>
                 <button data-sample="nested" class="sample-load-btn w-full px-3 py-1.5 text-left hover:bg-canvas-soft-2 transition-colors cursor-pointer">Nested Array</button>
                 <button data-sample="config" class="sample-load-btn w-full px-3 py-1.5 text-left hover:bg-canvas-soft-2 transition-colors cursor-pointer">Config File</button>
@@ -216,127 +216,304 @@
 
       <!-- Panel 2: Diff Compare -->
       <div id="panel-diff" class="workspace-panel flex-1 flex flex-col hidden">
-        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex items-center justify-between text-xs select-none">
-          <span class="font-sans font-semibold text-body">Side-by-Side JSON Diff Tool</span>
-          <button id="btn-compare" class="px-4 py-1.5 rounded bg-primary hover:opacity-90 text-on-primary font-medium shadow-level-2 transition-all cursor-pointer">
-            Compare JSON
-          </button>
-        </div>
-        
-        <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-hairline min-h-[400px]">
-          <!-- JSON A Input -->
-          <div class="flex flex-col relative h-[300px] lg:h-auto">
-            <textarea 
-              id="diff-input-a" 
-              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas"
-              placeholder='Paste Original JSON A here...'
-              spellcheck="false"
-            ></textarea>
-            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Original JSON A</div>
+        <!-- Editor Header toolbar -->
+        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs select-none">
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Load Sample Diff -->
+            <button id="btn-diff-sample" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body font-medium shadow-level-2 transition-all cursor-pointer">
+              Load Sample Diff
+            </button>
+            <!-- Swap Inputs -->
+            <button id="btn-diff-swap" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink font-medium shadow-level-2 transition-all cursor-pointer flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              Swap A ⇄ B
+            </button>
+            <!-- Format Inputs -->
+            <button id="btn-diff-format" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink font-medium shadow-level-2 transition-all cursor-pointer" title="Format both inputs">
+              Format inputs
+            </button>
+            <!-- Clear Both -->
+            <button id="btn-diff-clear" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-error font-medium shadow-level-2 transition-all cursor-pointer">
+              Clear Both
+            </button>
           </div>
-          <!-- JSON B Input -->
-          <div class="flex flex-col relative h-[300px] lg:h-auto">
-            <textarea 
-              id="diff-input-b" 
-              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas"
-              placeholder='Paste Modified JSON B here...'
-              spellcheck="false"
-            ></textarea>
-            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Modified JSON B</div>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-mute font-medium">Ignore keys:</span>
+            <input 
+              type="text" 
+              id="diff-ignore-keys" 
+              class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas text-ink focus:outline-none placeholder:text-mute focus:bg-canvas w-44" 
+              placeholder="e.g. updated_at, id, uuid"
+            />
           </div>
         </div>
 
+        <!-- Inputs Split Screen -->
+        <div class="flex-grow grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-hairline min-h-[350px]">
+          <!-- JSON A Input -->
+          <div class="flex flex-col relative h-[220px] lg:h-auto">
+            <!-- File Drag/Drop Overlay A -->
+            <div id="drop-zone-a" class="absolute inset-0 bg-canvas/90 border-2 border-dashed border-link z-20 hidden items-center justify-center flex-col gap-3 transition-opacity duration-200">
+              <div class="w-10 h-10 rounded-full bg-link-bg-soft flex items-center justify-center text-link">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+              </div>
+              <p class="font-sans font-semibold text-xs text-ink">Drop Original JSON A here</p>
+            </div>
+            
+            <div class="flex-grow flex overflow-hidden bg-canvas relative">
+              <div id="diff-line-numbers-a" class="w-9 py-4 font-mono text-[13px] text-mute select-none border-r border-hairline bg-canvas-soft text-right pr-2 leading-6 overflow-hidden">
+                <div>1</div>
+              </div>
+              <textarea 
+                id="diff-input-a" 
+                class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-transparent whitespace-pre overflow-x-auto"
+                placeholder='Paste Original JSON A here...'
+                spellcheck="false"
+                wrap="off"
+              ></textarea>
+            </div>
+            <div class="border-t border-hairline px-4 py-2 bg-canvas-soft-2 flex justify-between items-center text-[10px] text-mute font-mono select-none">
+              <span>Original JSON A</span>
+              <label class="hover:text-ink cursor-pointer flex items-center gap-1">
+                <input type="file" id="file-uploader-a" class="hidden" accept=".json,.txt" />
+                <span>Upload file</span>
+              </label>
+            </div>
+          </div>
+          <!-- JSON B Input -->
+          <div class="flex flex-col relative h-[220px] lg:h-auto">
+            <!-- File Drag/Drop Overlay B -->
+            <div id="drop-zone-b" class="absolute inset-0 bg-canvas/90 border-2 border-dashed border-link z-20 hidden items-center justify-center flex-col gap-3 transition-opacity duration-200">
+              <div class="w-10 h-10 rounded-full bg-link-bg-soft flex items-center justify-center text-link">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+              </div>
+              <p class="font-sans font-semibold text-xs text-ink">Drop Modified JSON B here</p>
+            </div>
+            
+            <div class="flex-grow flex overflow-hidden bg-canvas relative">
+              <div id="diff-line-numbers-b" class="w-9 py-4 font-mono text-[13px] text-mute select-none border-r border-hairline bg-canvas-soft text-right pr-2 leading-6 overflow-hidden">
+                <div>1</div>
+              </div>
+              <textarea 
+                id="diff-input-b" 
+                class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-transparent whitespace-pre overflow-x-auto"
+                placeholder='Paste Modified JSON B here...'
+                spellcheck="false"
+                wrap="off"
+              ></textarea>
+            </div>
+            <div class="border-t border-hairline px-4 py-2 bg-canvas-soft-2 flex justify-between items-center text-[10px] text-mute font-mono select-none">
+              <span>Modified JSON B</span>
+              <label class="hover:text-ink cursor-pointer flex items-center gap-1">
+                <input type="file" id="file-uploader-b" class="hidden" accept=".json,.txt" />
+                <span>Upload file</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Run Compare action bar -->
+        <div class="border-t border-hairline p-4 bg-canvas flex items-center justify-center">
+          <button id="btn-compare" class="px-6 py-2.5 rounded-full bg-primary hover:opacity-90 text-on-primary font-sans font-semibold text-sm shadow-level-4 transition-all duration-200 cursor-pointer select-none">
+            Compare JSON payloads
+          </button>
+        </div>
+
         <!-- Diff output display -->
-        <div id="diff-output-panel" class="hidden border-t border-hairline bg-canvas-soft flex flex-col flex-1 max-h-[400px]">
-          <div class="border-b border-hairline px-4 py-2 bg-canvas-soft-2 text-xs font-semibold text-body">Comparison Results</div>
-          <div class="flex-1 overflow-auto p-4 font-mono text-[13px] leading-6 bg-canvas" id="diff-output-container">
-            <!-- Diff lines will generate here -->
+        <div id="diff-output-panel" class="hidden border-t border-hairline bg-canvas-soft flex flex-col flex-1 min-h-[400px]">
+          <!-- Results Sub Toolbar -->
+          <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs select-none">
+            <!-- View Tabs selector -->
+            <div class="flex border border-hairline rounded-md bg-canvas overflow-hidden shadow-level-1 shrink-0">
+              <button id="btn-diff-view-split" class="diff-view-btn px-3 py-1.5 font-medium text-ink bg-canvas-soft-2 transition-colors cursor-pointer border-r border-hairline">Split View</button>
+              <button id="btn-diff-view-unified" class="diff-view-btn px-3 py-1.5 font-medium text-body hover:text-ink transition-colors cursor-pointer border-r border-hairline">Unified View</button>
+              <button id="btn-diff-view-tree" class="diff-view-btn px-3 py-1.5 font-medium text-body hover:text-ink transition-colors cursor-pointer">Semantic Tree Diff</button>
+            </div>
+
+            <!-- Stats badges -->
+            <div class="flex items-center gap-2 select-none flex-wrap font-sans text-[11px] font-medium">
+              <span class="px-2 py-0.5 rounded bg-green-500/10 text-green-700 dark:text-green-400 border border-green-500/20 shadow-level-1 flex items-center gap-1" id="diff-stat-add">
+                <span class="font-bold">+</span> 0 Added
+              </span>
+              <span class="px-2 py-0.5 rounded bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 shadow-level-1 flex items-center gap-1" id="diff-stat-del">
+                <span class="font-bold">-</span> 0 Deleted
+              </span>
+              <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20 shadow-level-1 flex items-center gap-1" id="diff-stat-mod">
+                <span class="font-bold">~</span> 0 Modified
+              </span>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <!-- Tree only: show only changes -->
+              <label id="lbl-diff-show-changes" class="hidden items-center gap-1.5 text-xs text-body hover:text-ink cursor-pointer mr-2">
+                <input type="checkbox" id="chk-diff-show-changes" class="rounded border-hairline text-primary focus:ring-primary cursor-pointer" />
+                <span>Show only changes</span>
+              </label>
+
+              <button id="btn-diff-prev" class="px-2 py-1 rounded border border-hairline text-[10px] font-semibold bg-canvas hover:bg-canvas-soft-2 cursor-pointer flex items-center gap-1 transition-colors select-none" disabled>
+                ◀ Prev Diff
+              </button>
+              <span id="diff-nav-stats" class="text-[10px] font-mono text-mute font-medium select-none px-1">0 / 0</span>
+              <button id="btn-diff-next" class="px-2 py-1 rounded border border-hairline text-[10px] font-semibold bg-canvas hover:bg-canvas-soft-2 cursor-pointer flex items-center gap-1 transition-colors select-none" disabled>
+                Next Diff ▶
+              </button>
+            </div>
+          </div>
+
+          <div class="flex-grow overflow-auto relative p-4 bg-canvas" id="diff-results-pane" style="max-height: 500px;">
+            <!-- View 1: Split View container -->
+            <div id="diff-output-split" class="font-mono text-[13px] leading-6 flex flex-col gap-0 border border-hairline rounded-lg overflow-hidden select-text bg-canvas"></div>
+            
+            <!-- View 2: Unified View container -->
+            <div id="diff-output-unified" class="hidden font-mono text-[13px] leading-6 flex flex-col gap-0 border border-hairline rounded-lg overflow-hidden select-text bg-canvas"></div>
+
+            <!-- View 3: Tree Diff Container -->
+            <div id="diff-output-tree" class="hidden select-tree-container select-none"></div>
           </div>
         </div>
       </div>
 
       <!-- Panel 3: Converters -->
       <div id="panel-converters" class="workspace-panel flex-1 flex flex-col hidden">
-        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex items-center justify-between text-xs select-none">
-          <div class="flex items-center gap-3">
-            <span class="font-sans font-semibold text-body">Convert Formats:</span>
-            <select id="converter-select" class="px-2.5 py-1 rounded border border-hairline bg-canvas text-body focus:outline-none cursor-pointer">
-              <option value="json2yaml">JSON to YAML</option>
-              <option value="yaml2json">YAML to JSON</option>
-              <option value="json2xml">JSON to XML</option>
-              <option value="xml2json">XML to JSON</option>
-              <option value="json2csv">JSON to CSV</option>
-              <option value="csv2json">CSV to JSON</option>
+        <!-- Converter Toolbar -->
+        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs select-none">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-sans font-semibold text-body">Format:</span>
+            <select id="converter-select" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas text-body focus:outline-none cursor-pointer shadow-level-1">
+              <option value="json2yaml">JSON → YAML</option>
+              <option value="yaml2json">YAML → JSON</option>
+              <option value="json2xml">JSON → XML</option>
+              <option value="xml2json">XML → JSON</option>
+              <option value="json2csv">JSON → CSV</option>
+              <option value="csv2json">CSV → JSON</option>
             </select>
+            <!-- Swap direction -->
+            <button id="btn-converter-swap" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink font-medium shadow-level-2 transition-all cursor-pointer flex items-center gap-1" title="Swap conversion direction">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              Swap
+            </button>
+            <!-- Clear -->
+            <button id="btn-converter-clear" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-error font-medium shadow-level-2 transition-all cursor-pointer">
+              Clear
+            </button>
           </div>
-          <button id="btn-convert" class="px-4 py-1.5 rounded bg-primary hover:opacity-90 text-on-primary font-medium shadow-level-2 transition-all cursor-pointer">
-            Run Convert
-          </button>
+          <div class="flex items-center gap-2">
+            <!-- Copy Output -->
+            <button id="btn-converter-copy" class="p-1.5 rounded border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink font-medium shadow-level-2 transition-all cursor-pointer" title="Copy converted output">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-5 4h6m-6 4h6m-2 4h4" />
+              </svg>
+            </button>
+            <!-- Download Output -->
+            <button id="btn-converter-download" class="p-1.5 rounded border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink font-medium shadow-level-2 transition-all cursor-pointer" title="Download converted output">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- Converter Split screen -->
         <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-hairline">
           <!-- Input -->
-          <div class="flex flex-col relative h-[300px] lg:h-auto">
+          <div class="flex flex-col relative h-[350px] lg:h-auto min-h-[350px]">
             <textarea 
               id="converter-input" 
-              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas"
+              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas whitespace-pre overflow-x-auto"
               placeholder='Paste input text here...'
               spellcheck="false"
+              wrap="off"
             ></textarea>
-            <div id="converter-input-label" class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Source Input</div>
+            <div id="converter-input-label" class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono select-none">Source Input</div>
           </div>
           <!-- Output -->
-          <div class="flex flex-col relative h-[300px] lg:h-auto">
+          <div class="flex flex-col relative h-[350px] lg:h-auto min-h-[350px]">
             <textarea 
               id="converter-output" 
-              class="flex-1 p-4 font-mono text-[13px] text-ink leading-6 bg-canvas-soft focus:outline-none resize-none overflow-y-auto leading-6"
+              class="flex-1 p-4 font-mono text-[13px] text-ink leading-6 bg-canvas-soft focus:outline-none resize-none overflow-y-auto whitespace-pre overflow-x-auto"
               placeholder='Converted output will appear here...'
               readonly
+              wrap="off"
             ></textarea>
-            <div id="converter-output-label" class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Converted Output</div>
+            <div id="converter-output-label" class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono select-none">Converted Output</div>
           </div>
+        </div>
+
+        <!-- Convert Action Bar -->
+        <div class="border-t border-hairline p-4 bg-canvas flex items-center justify-center gap-4">
+          <button id="btn-convert" class="px-6 py-2.5 rounded-full bg-primary hover:opacity-90 text-on-primary font-sans font-semibold text-sm shadow-level-4 transition-all duration-200 cursor-pointer select-none">
+            Run Convert
+          </button>
         </div>
       </div>
 
       <!-- Panel 4: Encoder/Decoder -->
       <div id="panel-encoder" class="workspace-panel flex-1 flex flex-col hidden">
-        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex items-center justify-between text-xs select-none">
-          <div class="flex items-center gap-3">
-            <span class="font-sans font-semibold text-body">Select Operation:</span>
-            <select id="encoder-select" class="px-2.5 py-1 rounded border border-hairline bg-canvas text-body focus:outline-none cursor-pointer">
+        <!-- Encoder Toolbar -->
+        <div class="border-b border-hairline bg-canvas-soft-2 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs select-none">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-sans font-semibold text-body">Operation:</span>
+            <select id="encoder-select" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas text-body focus:outline-none cursor-pointer shadow-level-1">
               <option value="b64enc">Base64 Encode</option>
               <option value="b64dec">Base64 Decode</option>
               <option value="urlenc">URL Encode</option>
               <option value="urldec">URL Decode</option>
             </select>
+            <!-- Clear -->
+            <button id="btn-encoder-clear" class="px-2.5 py-1.5 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-error font-medium shadow-level-2 transition-all cursor-pointer">
+              Clear
+            </button>
           </div>
-          <button id="btn-encode" class="px-4 py-1.5 rounded bg-primary hover:opacity-90 text-on-primary font-medium shadow-level-2 transition-all cursor-pointer">
-            Execute
-          </button>
+          <div class="flex items-center gap-2">
+            <!-- Copy Output -->
+            <button id="btn-encoder-copy" class="p-1.5 rounded border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink font-medium shadow-level-2 transition-all cursor-pointer" title="Copy result">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-5 4h6m-6 4h6m-2 4h4" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-hairline">
           <!-- Input -->
-          <div class="flex flex-col relative h-[300px] lg:h-auto">
+          <div class="flex flex-col relative h-[350px] lg:h-auto min-h-[350px]">
             <textarea 
               id="encoder-input" 
-              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas"
+              class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-canvas whitespace-pre overflow-x-auto"
               placeholder='Paste source text here...'
               spellcheck="false"
+              wrap="off"
             ></textarea>
-            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Plain/Encoded Input</div>
+            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono select-none">Plain/Encoded Input</div>
           </div>
           <!-- Output -->
-          <div class="flex flex-col relative h-[300px] lg:h-auto">
+          <div class="flex flex-col relative h-[350px] lg:h-auto min-h-[350px]">
             <textarea 
               id="encoder-output" 
-              class="flex-1 p-4 font-mono text-[13px] text-ink leading-6 bg-canvas-soft focus:outline-none resize-none overflow-y-auto leading-6"
+              class="flex-1 p-4 font-mono text-[13px] text-ink leading-6 bg-canvas-soft focus:outline-none resize-none overflow-y-auto whitespace-pre overflow-x-auto"
               placeholder='Result will appear here...'
               readonly
+              wrap="off"
             ></textarea>
-            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono">Result Output</div>
+            <div class="border-t border-hairline px-4 py-1.5 bg-canvas-soft-2 text-[10px] text-mute font-mono select-none">Result Output</div>
           </div>
+        </div>
+
+        <!-- Encode Action Bar -->
+        <div class="border-t border-hairline p-4 bg-canvas flex items-center justify-center gap-4">
+          <button id="btn-encode" class="px-6 py-2.5 rounded-full bg-primary hover:opacity-90 text-on-primary font-sans font-semibold text-sm shadow-level-4 transition-all duration-200 cursor-pointer select-none">
+            Execute
+          </button>
         </div>
       </div>
       
@@ -381,6 +558,7 @@
   import yaml from 'js-yaml';
   import { renderJsonTree, escapeHtml } from '../utils/TreeViewer.js';
   import { jsonToXml, xmlToJson } from '../utils/XmlConverter.js';
+  import { calculateLcsDiff, diffWords, diffStructures, renderTreeDiff, cloneAndFilter } from '../utils/DiffEngine.js';
 
   // --- Theme/Layout Elements ---
   const tabButtons = document.querySelectorAll('.tab-btn');
@@ -420,9 +598,39 @@
   // --- Diff Elements ---
   const diffInputA = document.getElementById('diff-input-a') as HTMLTextAreaElement;
   const diffInputB = document.getElementById('diff-input-b') as HTMLTextAreaElement;
+  const diffLineNumbersA = document.getElementById('diff-line-numbers-a');
+  const diffLineNumbersB = document.getElementById('diff-line-numbers-b');
   const btnCompare = document.getElementById('btn-compare');
   const diffOutputPanel = document.getElementById('diff-output-panel');
-  const diffOutputContainer = document.getElementById('diff-output-container');
+  
+  const btnDiffSample = document.getElementById('btn-diff-sample');
+  const btnDiffSwap = document.getElementById('btn-diff-swap');
+  const btnDiffFormat = document.getElementById('btn-diff-format');
+  const btnDiffClear = document.getElementById('btn-diff-clear');
+  const diffIgnoreKeysInput = document.getElementById('diff-ignore-keys') as HTMLInputElement;
+
+  const btnDiffViewSplit = document.getElementById('btn-diff-view-split');
+  const btnDiffViewUnified = document.getElementById('btn-diff-view-unified');
+  const btnDiffViewTree = document.getElementById('btn-diff-view-tree');
+  
+  const diffOutputSplit = document.getElementById('diff-output-split');
+  const diffOutputUnified = document.getElementById('diff-output-unified');
+  const diffOutputTree = document.getElementById('diff-output-tree');
+
+  const diffStatAdd = document.getElementById('diff-stat-add');
+  const diffStatDel = document.getElementById('diff-stat-del');
+  const diffStatMod = document.getElementById('diff-stat-mod');
+
+  const btnDiffPrev = document.getElementById('btn-diff-prev') as HTMLButtonElement;
+  const btnDiffNext = document.getElementById('btn-diff-next') as HTMLButtonElement;
+  const diffNavStats = document.getElementById('diff-nav-stats');
+  const chkDiffShowChanges = document.getElementById('chk-diff-show-changes') as HTMLInputElement;
+  const lblDiffShowChanges = document.getElementById('lbl-diff-show-changes');
+
+  const fileUploaderA = document.getElementById('file-uploader-a') as HTMLInputElement;
+  const fileUploaderB = document.getElementById('file-uploader-b') as HTMLInputElement;
+  const dropZoneA = document.getElementById('drop-zone-a');
+  const dropZoneB = document.getElementById('drop-zone-b');
 
   // --- Converter Elements ---
   const converterSelect = document.getElementById('converter-select') as HTMLSelectElement;
@@ -431,12 +639,18 @@
   const btnConvert = document.getElementById('btn-convert');
   const converterInputLabel = document.getElementById('converter-input-label');
   const converterOutputLabel = document.getElementById('converter-output-label');
+  const btnConverterSwap = document.getElementById('btn-converter-swap');
+  const btnConverterClear = document.getElementById('btn-converter-clear');
+  const btnConverterCopy = document.getElementById('btn-converter-copy');
+  const btnConverterDownload = document.getElementById('btn-converter-download');
 
   // --- Encoder/Decoder Elements ---
   const encoderSelect = document.getElementById('encoder-select') as HTMLSelectElement;
   const encoderInput = document.getElementById('encoder-input') as HTMLTextAreaElement;
   const encoderOutput = document.getElementById('encoder-output') as HTMLTextAreaElement;
   const btnEncode = document.getElementById('btn-encode');
+  const btnEncoderClear = document.getElementById('btn-encoder-clear');
+  const btnEncoderCopy = document.getElementById('btn-encoder-copy');
 
   // --- History Elements ---
   const historyList = document.getElementById('history-list');
@@ -905,7 +1119,35 @@
     }
   });
 
-  // --- 7. Load Samples ---
+  // --- 7. Load Samples (click-based dropdown) ---
+  const sampleToggleBtn = document.getElementById('btn-sample-toggle');
+  const sampleDropdownMenu = document.getElementById('sample-dropdown-menu');
+  const sampleChevron = document.getElementById('sample-chevron');
+  const sampleDropdownWrapper = document.getElementById('sample-dropdown-wrapper');
+
+  const closeSampleDropdown = () => {
+    sampleDropdownMenu?.classList.add('hidden');
+    sampleChevron?.classList.remove('rotate-180');
+  };
+
+  sampleToggleBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = !sampleDropdownMenu?.classList.contains('hidden');
+    if (isOpen) {
+      closeSampleDropdown();
+    } else {
+      sampleDropdownMenu?.classList.remove('hidden');
+      sampleChevron?.classList.add('rotate-180');
+    }
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!sampleDropdownWrapper?.contains(e.target as Node)) {
+      closeSampleDropdown();
+    }
+  });
+
   sampleButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const sampleKey = btn.getAttribute('data-sample');
@@ -913,6 +1155,7 @@
         const data = samples[sampleKey];
         loadTextIntoEditor(JSON.stringify(data, null, 4));
       }
+      closeSampleDropdown();
     });
   });
 
@@ -969,101 +1212,700 @@
     URL.revokeObjectURL(url);
   });
 
-  // --- 9. LCS Diff Tool Engine ---
-  const calculateLcsDiff = (text1: string, text2: string) => {
-    const a = text1.split('\n');
-    const b = text2.split('\n');
-    const n = a.length;
-    const m = b.length;
-    
-    // DP array size optimization: use 2D array since lengths are reasonable
-    const dp = Array(n + 1).fill(0).map(() => Array(m + 1).fill(0));
-    
-    for (let i = 1; i <= n; i++) {
-      for (let j = 1; j <= m; j++) {
-        if (a[i - 1] === b[j - 1]) {
-          dp[i][j] = dp[i - 1][j - 1] + 1;
-        } else {
-          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-        }
-      }
+
+  // --- 9. JSON Diff Compare Engine & UI Wiring ---
+  let diffActiveView = 'split'; // split, unified, tree
+  let diffTargets = [];
+  let diffCurrentNavIndex = -1;
+  let diffTreeCache = null;
+
+  const updateLineCounterDiffA = () => {
+    if (!diffInputA || !diffLineNumbersA) return;
+    const value = diffInputA.value;
+    const lines = value.split('\n');
+    let lineNumbersHtml = '';
+    for (let i = 1; i <= lines.length; i++) {
+      lineNumbersHtml += `<div class="h-6 pr-1">${i}</div>`;
     }
-    
-    let i = n, j = m;
-    const diff = [];
-    
-    while (i > 0 || j > 0) {
-      if (i > 0 && j > 0 && a[i - 1] === b[j - 1]) {
-        diff.push({ type: 'normal', val: a[i - 1], lineA: i, lineB: j });
-        i--;
-        j--;
-      } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
-        diff.push({ type: 'added', val: b[j - 1], lineA: null, lineB: j });
-        j--;
-      } else if (i > 0 && (j === 0 || dp[i][j - 1] < dp[i - 1][j])) {
-        diff.push({ type: 'removed', val: a[i - 1], lineA: i, lineB: null });
-        i--;
-      }
-    }
-    
-    return diff.reverse();
+    diffLineNumbersA.innerHTML = lineNumbersHtml;
   };
 
-  btnCompare?.addEventListener('click', () => {
-    const aRaw = diffInputA.value.trim();
-    const bRaw = diffInputB.value.trim();
+  const updateLineCounterDiffB = () => {
+    if (!diffInputB || !diffLineNumbersB) return;
+    const value = diffInputB.value;
+    const lines = value.split('\n');
+    let lineNumbersHtml = '';
+    for (let i = 1; i <= lines.length; i++) {
+      lineNumbersHtml += `<div class="h-6 pr-1">${i}</div>`;
+    }
+    diffLineNumbersB.innerHTML = lineNumbersHtml;
+  };
 
-    if (!aRaw || !bRaw) {
-      alert("Please populate both JSON A and JSON B boxes first.");
+  diffInputA?.addEventListener('input', updateLineCounterDiffA);
+  diffInputB?.addEventListener('input', updateLineCounterDiffB);
+
+  diffInputA?.addEventListener('scroll', () => {
+    if (diffLineNumbersA && diffInputA) {
+      diffLineNumbersA.scrollTop = diffInputA.scrollTop;
+    }
+  });
+  diffInputB?.addEventListener('scroll', () => {
+    if (diffLineNumbersB && diffInputB) {
+      diffLineNumbersB.scrollTop = diffInputB.scrollTop;
+    }
+  });
+
+  // Drag and Drop & File Uploads A
+  fileUploaderA?.addEventListener('change', () => {
+    const file = fileUploaderA.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      diffInputA.value = evt.target?.result as string;
+      updateLineCounterDiffA();
+    };
+    reader.readAsText(file);
+  });
+
+  diffInputA?.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    dropZoneA?.classList.remove('hidden');
+    dropZoneA?.classList.add('flex');
+  });
+  dropZoneA?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+  dropZoneA?.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dropZoneA?.classList.add('hidden');
+    dropZoneA?.classList.remove('flex');
+  });
+  dropZoneA?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZoneA?.classList.add('hidden');
+    dropZoneA?.classList.remove('flex');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        diffInputA.value = evt.target?.result as string;
+        updateLineCounterDiffA();
+      };
+      reader.readAsText(file);
+    }
+  });
+
+  // Drag and Drop & File Uploads B
+  fileUploaderB?.addEventListener('change', () => {
+    const file = fileUploaderB.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      diffInputB.value = evt.target?.result as string;
+      updateLineCounterDiffB();
+    };
+    reader.readAsText(file);
+  });
+
+  diffInputB?.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    dropZoneB?.classList.remove('hidden');
+    dropZoneB?.classList.add('flex');
+  });
+  dropZoneB?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+  dropZoneB?.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dropZoneB?.classList.add('hidden');
+    dropZoneB?.classList.remove('flex');
+  });
+  dropZoneB?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZoneB?.classList.add('hidden');
+    dropZoneB?.classList.remove('flex');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        diffInputB.value = evt.target?.result as string;
+        updateLineCounterDiffB();
+      };
+      reader.readAsText(file);
+    }
+  });
+
+  // Toolbar Actions
+  btnDiffSample?.addEventListener('click', () => {
+    const sampleA = {
+      name: "JSONFormatter Sandbox",
+      version: "1.2.0",
+      private: true,
+      features: [
+        "formatting",
+        "validation",
+        "diff compare",
+        "converters"
+      ],
+      settings: {
+        theme: "light",
+        indent: 4,
+        saveHistory: true,
+        updated_at: "2026-06-13T12:00:00Z"
+      },
+      author: {
+        name: "Jane Doe",
+        email: "jane@example.com"
+      }
+    };
+    const sampleB = {
+      name: "JSONFormatter Client Sandbox",
+      version: "1.3.0",
+      private: true,
+      features: [
+        "formatting",
+        "validation",
+        "advanced diff compare",
+        "converters",
+        "encodings"
+      ],
+      settings: {
+        theme: "dark",
+        indent: 2,
+        saveHistory: true,
+        updated_at: "2026-06-14T15:00:00Z"
+      },
+      metadata: {
+        environment: "client-only",
+        secure: true
+      }
+    };
+
+    diffInputA.value = JSON.stringify(sampleA, null, 4);
+    diffInputB.value = JSON.stringify(sampleB, null, 4);
+    updateLineCounterDiffA();
+    updateLineCounterDiffB();
+  });
+
+  btnDiffSwap?.addEventListener('click', () => {
+    const temp = diffInputA.value;
+    diffInputA.value = diffInputB.value;
+    diffInputB.value = temp;
+    updateLineCounterDiffA();
+    updateLineCounterDiffB();
+    if (diffOutputPanel && !diffOutputPanel.classList.contains('hidden')) {
+      runComparison();
+    }
+  });
+
+  btnDiffFormat?.addEventListener('click', () => {
+    const cleanBox = (textarea: HTMLTextAreaElement, lineNumbersDiv: HTMLElement | null) => {
+      const val = textarea.value.trim();
+      if (!val) return;
+      try {
+        textarea.value = JSON.stringify(JSON.parse(val), null, 4);
+      } catch (e: any) {
+        alert(`Failed to format: ${e.message}`);
+      }
+    };
+    cleanBox(diffInputA, diffLineNumbersA);
+    cleanBox(diffInputB, diffLineNumbersB);
+    updateLineCounterDiffA();
+    updateLineCounterDiffB();
+  });
+
+  btnDiffClear?.addEventListener('click', () => {
+    diffInputA.value = '';
+    diffInputB.value = '';
+    updateLineCounterDiffA();
+    updateLineCounterDiffB();
+    diffOutputPanel?.classList.add('hidden');
+    diffOutputSplit!.innerHTML = '';
+    diffOutputUnified!.innerHTML = '';
+    diffOutputTree!.innerHTML = '';
+    diffTargets = [];
+    diffCurrentNavIndex = -1;
+    diffTreeCache = null;
+  });
+
+  // Switch View Options
+  const switchDiffView = (viewName: string) => {
+    diffActiveView = viewName;
+
+    // Button highlighting
+    const btns = [btnDiffViewSplit, btnDiffViewUnified, btnDiffViewTree];
+    btns.forEach(btn => {
+      if (!btn) return;
+      if (btn.id === `btn-diff-view-${viewName}`) {
+        btn.classList.add('bg-canvas-soft-2', 'text-ink');
+        btn.classList.remove('text-body');
+      } else {
+        btn.classList.remove('bg-canvas-soft-2', 'text-ink');
+        btn.classList.add('text-body');
+      }
+    });
+
+    // Toggle panels
+    if (viewName === 'split') {
+      diffOutputSplit?.classList.remove('hidden');
+      diffOutputUnified?.classList.add('hidden');
+      diffOutputTree?.classList.add('hidden');
+      lblDiffShowChanges?.classList.add('hidden');
+      lblDiffShowChanges?.classList.remove('flex');
+    } else if (viewName === 'unified') {
+      diffOutputSplit?.classList.add('hidden');
+      diffOutputUnified?.classList.remove('hidden');
+      diffOutputTree?.classList.add('hidden');
+      lblDiffShowChanges?.classList.add('hidden');
+      lblDiffShowChanges?.classList.remove('flex');
+    } else if (viewName === 'tree') {
+      diffOutputSplit?.classList.add('hidden');
+      diffOutputUnified?.classList.add('hidden');
+      diffOutputTree?.classList.remove('hidden');
+      lblDiffShowChanges?.classList.remove('hidden');
+      lblDiffShowChanges?.classList.add('flex');
+      renderTreeDiffPanel();
+    }
+
+    // Recalculate targets for navigator scrolling
+    updateNavigatorTargets();
+  };
+
+  btnDiffViewSplit?.addEventListener('click', () => switchDiffView('split'));
+  btnDiffViewUnified?.addEventListener('click', () => switchDiffView('unified'));
+  btnDiffViewTree?.addEventListener('click', () => switchDiffView('tree'));
+
+  chkDiffShowChanges?.addEventListener('change', () => {
+    if (diffActiveView === 'tree') {
+      renderTreeDiffPanel();
+      updateNavigatorTargets();
+    }
+  });
+
+  // Main comparison triggers
+  const runComparison = () => {
+    const rawA = diffInputA.value.trim();
+    const rawB = diffInputB.value.trim();
+
+    if (!rawA && !rawB) {
+      alert("Please enter JSON data in Box A and Box B first.");
       return;
     }
 
-    let aPretty = aRaw;
-    let bPretty = bRaw;
+    diffOutputPanel?.classList.remove('hidden');
 
-    // Pre-format both if they are valid JSON objects to ensure we don't diff whitespace
+    let objA: any = null;
+    let objB: any = null;
+    let validJson = true;
+
     try {
-      aPretty = JSON.stringify(JSON.parse(aRaw), null, 2);
-    } catch (e) {}
-    try {
-      bPretty = JSON.stringify(JSON.parse(bRaw), null, 2);
-    } catch (e) {}
-
-    const diffResults = calculateLcsDiff(aPretty, bPretty);
-    
-    // Clear & display
-    if (diffOutputContainer && diffOutputPanel) {
-      diffOutputPanel.classList.remove('hidden');
-      
-      let html = '';
-      diffResults.forEach(item => {
-        let bgClass = 'text-ink';
-        let prefix = ' ';
-        
-        if (item.type === 'added') {
-          bgClass = 'bg-green-100/50 dark:bg-green-950/30 text-green-700 dark:text-green-400 font-semibold';
-          prefix = '+';
-        } else if (item.type === 'removed') {
-          bgClass = 'bg-red-100/50 dark:bg-red-950/30 text-red-600 dark:text-red-400 line-through';
-          prefix = '-';
-        }
-        
-        const lineNumA = item.lineA !== null ? String(item.lineA).padStart(3, ' ') : '   ';
-        const lineNumB = item.lineB !== null ? String(item.lineB).padStart(3, ' ') : '   ';
-        
-        html += `<div class="flex select-all px-2 ${bgClass} hover:bg-canvas-soft-2 transition-colors">`;
-        html += `<span class="text-mute select-none border-r border-hairline pr-2 mr-2 text-[11px] font-sans shrink-0">${lineNumA} ➔ ${lineNumB}</span>`;
-        html += `<span class="select-none font-bold mr-2 text-mute shrink-0">${prefix}</span>`;
-        html += `<span class="break-all whitespace-pre-wrap">${escapeHtml(item.val)}</span>`;
-        html += `</div>`;
-      });
-
-      diffOutputContainer.innerHTML = html;
-      
-      // Auto scroll to results
-      diffOutputPanel.scrollIntoView({ behavior: 'smooth' });
+      objA = JSON.parse(rawA);
+    } catch (e) {
+      validJson = false;
     }
-  });
+
+    try {
+      objB = JSON.parse(rawB);
+    } catch (e) {
+      validJson = false;
+    }
+
+    // Process Ignored keys if valid
+    const ignoreVal = diffIgnoreKeysInput.value.trim();
+    const ignoreKeys = ignoreVal ? ignoreVal.split(',').map(k => k.trim()).filter(Boolean) : [];
+
+    let aPretty = rawA;
+    let bPretty = rawB;
+
+    if (validJson) {
+      const cleanA = cloneAndFilter(objA, ignoreKeys);
+      const cleanB = cloneAndFilter(objB, ignoreKeys);
+      diffTreeCache = diffStructures(cleanA, cleanB);
+
+      aPretty = JSON.stringify(cleanA, null, 2);
+      bPretty = JSON.stringify(cleanB, null, 2);
+    } else {
+      diffTreeCache = null;
+      // If ignoreKeys are provided, we attempt simple regex replacement for line compares too
+      if (ignoreKeys.length > 0) {
+        const filterLines = (text: string) => {
+          return text.split('\n').filter(line => {
+            return !ignoreKeys.some(key => line.includes(`"${key}"`));
+          }).join('\n');
+        };
+        aPretty = filterLines(rawA);
+        bPretty = filterLines(rawB);
+      }
+    }
+
+    // Compute line differences
+    const diffLines = calculateLcsDiff(aPretty, bPretty);
+
+    // Group adjacent removals/additions into modifications
+    let i = 0;
+    const processed = [];
+    let addCount = 0;
+    let delCount = 0;
+    let modCount = 0;
+
+    while (i < diffLines.length) {
+      const cur = diffLines[i];
+      const next = diffLines[i + 1];
+
+      if (cur.type === 'removed' && next && next.type === 'added') {
+        processed.push({
+          type: 'modified',
+          valA: cur.val,
+          valB: next.val,
+          lineA: cur.lineA,
+          lineB: next.lineB
+        });
+        modCount++;
+        i += 2;
+      } else {
+        processed.push(cur);
+        if (cur.type === 'added') addCount++;
+        else if (cur.type === 'removed') delCount++;
+        i++;
+      }
+    }
+
+    // Update Stats Badges
+    if (diffStatAdd) diffStatAdd.innerHTML = `<span class="font-bold">+</span> ${addCount} Added`;
+    if (diffStatDel) diffStatDel.innerHTML = `<span class="font-bold">-</span> ${delCount} Deleted`;
+    if (diffStatMod) diffStatMod.innerHTML = `<span class="font-bold">~</span> ${modCount} Modified`;
+
+    // Render Split and Unified HTML
+    renderSplitHtml(processed);
+    renderUnifiedHtml(processed);
+
+    if (diffActiveView === 'tree') {
+      if (!validJson) {
+        diffOutputTree!.innerHTML = `
+          <div class="p-8 text-center text-xs text-mute font-sans">
+            <svg class="w-8 h-8 text-warning mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p class="font-semibold text-ink">Tree Diff Unavailable</p>
+            <p class="mt-1">Tree comparison requires both inputs to be valid JSON documents.</p>
+          </div>
+        `;
+      } else {
+        renderTreeDiffPanel();
+      }
+    }
+
+    // Update navigator mappings
+    updateNavigatorTargets();
+
+    // Auto-scroll output panel into view
+    diffOutputPanel.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  btnCompare?.addEventListener('click', runComparison);
+
+  // Render Split view
+  const renderSplitHtml = (processedItems: any[]) => {
+    if (!diffOutputSplit) return;
+    let html = '';
+
+    processedItems.forEach(item => {
+      if (item.type === 'normal') {
+        const lineNumA = String(item.lineA).padStart(4, ' ');
+        const lineNumB = String(item.lineB).padStart(4, ' ');
+        html += `
+          <div class="grid grid-cols-2 divide-x divide-hairline border-b border-hairline last:border-0 hover:bg-canvas-soft-2 transition-colors select-text">
+            <div class="flex px-3 py-0.5 text-body">
+              <span class="w-10 text-right pr-2 text-mute select-none border-r border-hairline mr-2 font-mono text-[11px] shrink-0">${lineNumA}</span>
+              <span class="select-none text-mute mr-2.5 font-bold shrink-0">&nbsp;</span>
+              <span class="break-all whitespace-pre-wrap select-text">${escapeHtml(item.val)}</span>
+            </div>
+            <div class="flex px-3 py-0.5 text-body">
+              <span class="w-10 text-right pr-2 text-mute select-none border-r border-hairline mr-2 font-mono text-[11px] shrink-0">${lineNumB}</span>
+              <span class="select-none text-mute mr-2.5 font-bold shrink-0">&nbsp;</span>
+              <span class="break-all whitespace-pre-wrap select-text">${escapeHtml(item.val)}</span>
+            </div>
+          </div>
+        `;
+      } else if (item.type === 'added') {
+        const lineNumB = String(item.lineB).padStart(4, ' ');
+        html += `
+          <div class="grid grid-cols-2 divide-x divide-hairline border-b border-hairline last:border-0 hover:bg-canvas-soft-2 transition-colors diff-nav-target select-text">
+            <div class="flex px-3 py-0.5 bg-canvas-soft">
+              <span class="w-10 text-right pr-2 text-mute select-none border-r border-hairline mr-2 font-mono text-[11px] shrink-0">&nbsp;</span>
+            </div>
+            <div class="flex px-3 py-0.5 diff-line-added">
+              <span class="w-10 text-right pr-2 text-mute/50 select-none border-r border-hairline mr-2 font-mono text-[11px] shrink-0">${lineNumB}</span>
+              <span class="select-none mr-2.5 font-bold shrink-0">+</span>
+              <span class="break-all whitespace-pre-wrap select-text">${escapeHtml(item.val)}</span>
+            </div>
+          </div>
+        `;
+      } else if (item.type === 'removed') {
+        const lineNumA = String(item.lineA).padStart(4, ' ');
+        html += `
+          <div class="grid grid-cols-2 divide-x divide-hairline border-b border-hairline last:border-0 hover:bg-canvas-soft-2 transition-colors diff-nav-target select-text">
+            <div class="flex px-3 py-0.5 diff-line-removed">
+              <span class="w-10 text-right pr-2 text-mute/50 select-none border-r border-hairline mr-2 font-mono text-[11px] shrink-0">${lineNumA}</span>
+              <span class="select-none mr-2.5 font-bold shrink-0">-</span>
+              <span class="break-all whitespace-pre-wrap select-text">${escapeHtml(item.val)}</span>
+            </div>
+            <div class="flex px-3 py-0.5 bg-canvas-soft">
+              <span class="w-10 text-right pr-2 text-mute select-none border-r border-hairline mr-2 font-mono text-[11px] shrink-0">&nbsp;</span>
+            </div>
+          </div>
+        `;
+      } else if (item.type === 'modified') {
+        const lineNumA = String(item.lineA).padStart(4, ' ');
+        const lineNumB = String(item.lineB).padStart(4, ' ');
+        const words = diffWords(item.valA, item.valB);
+
+        let remHtml = '';
+        words.a.forEach(w => {
+          if (w.type === 'removed') {
+            remHtml += `<mark class="diff-word-removed">${escapeHtml(w.val)}</mark>`;
+          } else {
+            remHtml += escapeHtml(w.val);
+          }
+        });
+
+        let addHtml = '';
+        words.b.forEach(w => {
+          if (w.type === 'added') {
+            addHtml += `<mark class="diff-word-added">${escapeHtml(w.val)}</mark>`;
+          } else {
+            addHtml += escapeHtml(w.val);
+          }
+        });
+
+        html += `
+          <div class="grid grid-cols-2 divide-x divide-hairline border-b border-hairline last:border-0 hover:bg-canvas-soft-2 transition-colors diff-nav-target select-text">
+            <div class="flex px-3 py-0.5 diff-line-removed">
+              <span class="w-10 text-right pr-2 text-mute/50 select-none border-r border-hairline mr-2 font-mono text-[11px] shrink-0">${lineNumA}</span>
+              <span class="select-none mr-2.5 font-bold shrink-0">-</span>
+              <span class="break-all whitespace-pre-wrap select-text">${remHtml}</span>
+            </div>
+            <div class="flex px-3 py-0.5 diff-line-added">
+              <span class="w-10 text-right pr-2 text-mute/50 select-none border-r border-hairline mr-2 font-mono text-[11px] shrink-0">${lineNumB}</span>
+              <span class="select-none mr-2.5 font-bold shrink-0">+</span>
+              <span class="break-all whitespace-pre-wrap select-text">${addHtml}</span>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    diffOutputSplit.innerHTML = html;
+  };
+
+  // Render Unified view
+  const renderUnifiedHtml = (processedItems: any[]) => {
+    if (!diffOutputUnified) return;
+    let html = '';
+
+    processedItems.forEach(item => {
+      if (item.type === 'normal') {
+        const numLabel = `${item.lineA}➔${item.lineB}`.padStart(9, ' ');
+        html += `
+          <div class="flex px-3 py-0.5 hover:bg-canvas-soft-2 transition-colors select-text">
+            <span class="text-mute select-none border-r border-hairline pr-2 mr-2.5 font-mono text-[11px] shrink-0 w-16 text-right">${numLabel}</span>
+            <span class="select-none text-mute mr-2 font-bold shrink-0">&nbsp;</span>
+            <span class="break-all whitespace-pre-wrap select-text">${escapeHtml(item.val)}</span>
+          </div>
+        `;
+      } else if (item.type === 'added') {
+        const numLabel = ` ➔${item.lineB}`.padStart(9, ' ');
+        html += `
+          <div class="flex px-3 py-0.5 diff-line-added hover:bg-canvas-soft-2 transition-colors diff-nav-target select-text">
+            <span class="text-mute/50 select-none border-r border-hairline pr-2 mr-2.5 font-mono text-[11px] shrink-0 w-16 text-right">${numLabel}</span>
+            <span class="select-none mr-2 font-bold shrink-0">+</span>
+            <span class="break-all whitespace-pre-wrap select-text">${escapeHtml(item.val)}</span>
+          </div>
+        `;
+      } else if (item.type === 'removed') {
+        const numLabel = `${item.lineA}➔ `.padStart(9, ' ');
+        html += `
+          <div class="flex px-3 py-0.5 diff-line-removed hover:bg-canvas-soft-2 transition-colors diff-nav-target select-text">
+            <span class="text-mute/50 select-none border-r border-hairline pr-2 mr-2.5 font-mono text-[11px] shrink-0 w-16 text-right">${numLabel}</span>
+            <span class="select-none mr-2 font-bold shrink-0">-</span>
+            <span class="break-all whitespace-pre-wrap select-text">${escapeHtml(item.val)}</span>
+          </div>
+        `;
+      } else if (item.type === 'modified') {
+        const numLabelA = `${item.lineA}➔ `.padStart(9, ' ');
+        const numLabelB = ` ➔${item.lineB}`.padStart(9, ' ');
+        const words = diffWords(item.valA, item.valB);
+
+        let remHtml = '';
+        words.a.forEach(w => {
+          if (w.type === 'removed') {
+            remHtml += `<mark class="diff-word-removed">${escapeHtml(w.val)}</mark>`;
+          } else {
+            remHtml += escapeHtml(w.val);
+          }
+        });
+
+        let addHtml = '';
+        words.b.forEach(w => {
+          if (w.type === 'added') {
+            addHtml += `<mark class="diff-word-added">${escapeHtml(w.val)}</mark>`;
+          } else {
+            addHtml += escapeHtml(w.val);
+          }
+        });
+
+        html += `
+          <div class="flex px-3 py-0.5 diff-line-removed hover:bg-canvas-soft-2 transition-colors diff-nav-target select-text">
+            <span class="text-mute/50 select-none border-r border-hairline pr-2 mr-2.5 font-mono text-[11px] shrink-0 w-16 text-right">${numLabelA}</span>
+            <span class="select-none mr-2 font-bold shrink-0">-</span>
+            <span class="break-all whitespace-pre-wrap select-text">${remHtml}</span>
+          </div>
+          <div class="flex px-3 py-0.5 diff-line-added hover:bg-canvas-soft-2 transition-colors diff-nav-target select-text">
+            <span class="text-mute/50 select-none border-r border-hairline pr-2 mr-2.5 font-mono text-[11px] shrink-0 w-16 text-right">${numLabelB}</span>
+            <span class="select-none mr-2 font-bold shrink-0">+</span>
+            <span class="break-all whitespace-pre-wrap select-text">${addHtml}</span>
+          </div>
+        `;
+      }
+    });
+
+    diffOutputUnified.innerHTML = html;
+  };
+
+  // Render tree diff in the UI
+  const renderTreeDiffPanel = () => {
+    if (!diffOutputTree || !diffTreeCache) return;
+    const showOnlyChanges = chkDiffShowChanges.checked;
+    diffOutputTree.innerHTML = renderTreeDiff(diffTreeCache, showOnlyChanges);
+    setupTreeDiffCollapseListeners();
+  };
+
+  const setupTreeDiffCollapseListeners = () => {
+    if (!diffOutputTree) return;
+
+    // Expand/Collapse toggles
+    const carets = diffOutputTree.querySelectorAll('.tree-caret');
+    carets.forEach(caret => {
+      caret.parentElement?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const groupNode = caret.closest('.tree-group');
+        const children = groupNode?.querySelector('.tree-children');
+        const footer = groupNode?.querySelector('.tree-footer');
+        if (children) {
+          if (children.classList.contains('hidden')) {
+            children.classList.remove('hidden');
+            footer?.classList.remove('hidden');
+            caret.classList.add('rotate-90');
+          } else {
+            children.classList.add('hidden');
+            footer?.classList.add('hidden');
+            caret.classList.remove('rotate-90');
+          }
+        }
+      });
+    });
+
+    // Copy Path triggers
+    const pathButtons = diffOutputTree.querySelectorAll('.copy-path-btn');
+    pathButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const path = btn.getAttribute('data-path') || '';
+        navigator.clipboard.writeText(path).then(() => {
+          const originalText = btn.textContent;
+          btn.textContent = 'Copied!';
+          btn.classList.add('text-success');
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('text-success');
+          }, 1000);
+        });
+      });
+    });
+  };
+
+  // Jump and Scroll Navigation pointers
+  const updateNavigatorTargets = () => {
+    let activeContainer: HTMLElement | null = null;
+    if (diffActiveView === 'split') activeContainer = diffOutputSplit;
+    else if (diffActiveView === 'unified') activeContainer = diffOutputUnified;
+    else if (diffActiveView === 'tree') activeContainer = diffOutputTree;
+
+    if (!activeContainer) {
+      diffTargets = [];
+      diffCurrentNavIndex = -1;
+      updateNavigatorButtons();
+      return;
+    }
+
+    // Capture all elements marked as diff target changes
+    diffTargets = Array.from(activeContainer.querySelectorAll('.diff-nav-target'));
+    diffCurrentNavIndex = -1;
+    updateNavigatorButtons();
+  };
+
+  const updateNavigatorButtons = () => {
+    if (diffTargets.length > 0) {
+      btnDiffPrev.disabled = false;
+      btnDiffNext.disabled = false;
+      diffNavStats!.textContent = `0 / ${diffTargets.length}`;
+    } else {
+      btnDiffPrev.disabled = true;
+      btnDiffNext.disabled = true;
+      diffNavStats!.textContent = `0 / 0`;
+    }
+  };
+
+  const navigateDiff = (direction: 'prev' | 'next') => {
+    if (diffTargets.length === 0) return;
+
+    if (direction === 'next') {
+      diffCurrentNavIndex++;
+      if (diffCurrentNavIndex >= diffTargets.length) {
+        diffCurrentNavIndex = 0; // Wrap around to start
+      }
+    } else {
+      diffCurrentNavIndex--;
+      if (diffCurrentNavIndex < 0) {
+        diffCurrentNavIndex = diffTargets.length - 1; // Wrap to end
+      }
+    }
+
+    const target = diffTargets[diffCurrentNavIndex] as HTMLElement;
+
+    // Scroll container
+    target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest'
+    });
+
+    // Animate a quick flash color highlight
+    target.classList.remove('diff-highlight-flash');
+    void target.offsetWidth; // Force Reflow
+    target.classList.add('diff-highlight-flash');
+
+    // Expand parents if collapsed (specifically for Tree Diff View)
+    if (diffActiveView === 'tree') {
+      let parent = target.parentElement;
+      while (parent && parent !== diffOutputTree) {
+        if (parent.classList.contains('tree-children') && parent.classList.contains('hidden')) {
+          parent.classList.remove('hidden');
+          const groupNode = parent.closest('.tree-group');
+          const footerNode = groupNode?.querySelector('.tree-footer');
+          footerNode?.classList.remove('hidden');
+          const caret = groupNode?.querySelector('.tree-caret');
+          caret?.classList.add('rotate-90');
+        }
+        parent = parent.parentElement;
+      }
+    }
+
+    diffNavStats!.textContent = `${diffCurrentNavIndex + 1} / ${diffTargets.length}`;
+  };
+
+  btnDiffPrev?.addEventListener('click', () => navigateDiff('prev'));
+  btnDiffNext?.addEventListener('click', () => navigateDiff('next'));
 
   // --- 10. Converters (JSON ↔ YAML/XML/CSV) ---
   const updateConverterLabels = () => {
@@ -1129,6 +1971,63 @@
     } catch (err: any) {
       converterOutput.value = `Error: ${err.message}`;
     }
+  });
+
+  // Swap conversion direction (e.g., json2yaml ↔ yaml2json)
+  const swapPairs: Record<string, string> = {
+    'json2yaml': 'yaml2json', 'yaml2json': 'json2yaml',
+    'json2xml': 'xml2json', 'xml2json': 'json2xml',
+    'json2csv': 'csv2json', 'csv2json': 'json2csv',
+  };
+  btnConverterSwap?.addEventListener('click', () => {
+    const current = converterSelect.value;
+    const swapped = swapPairs[current];
+    if (swapped) {
+      converterSelect.value = swapped;
+      // Swap input ↔ output content
+      const tempVal = converterInput.value;
+      converterInput.value = converterOutput.value;
+      converterOutput.value = tempVal;
+      updateConverterLabels();
+    }
+  });
+
+  // Clear both converter fields
+  btnConverterClear?.addEventListener('click', () => {
+    converterInput.value = '';
+    converterOutput.value = '';
+  });
+
+  // Copy converter output to clipboard
+  btnConverterCopy?.addEventListener('click', async () => {
+    const text = converterOutput.value;
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      // Brief visual feedback
+      btnConverterCopy.title = 'Copied!';
+      setTimeout(() => { btnConverterCopy.title = 'Copy converted output'; }, 1500);
+    } catch { /* clipboard API blocked */ }
+  });
+
+  // Download converter output as file
+  btnConverterDownload?.addEventListener('click', () => {
+    const text = converterOutput.value;
+    if (!text) return;
+    const mode = converterSelect.value;
+    const extMap: Record<string, string> = {
+      'json2yaml': 'yaml', 'yaml2json': 'json',
+      'json2xml': 'xml', 'xml2json': 'json',
+      'json2csv': 'csv', 'csv2json': 'json',
+    };
+    const ext = extMap[mode] || 'txt';
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `converted.${ext}`;
+    a.click();
+    URL.revokeObjectURL(url);
   });
 
   // CSV Conversion Helpers
@@ -1244,6 +2143,23 @@
     } catch (err: any) {
       encoderOutput.value = `Conversion Error: ${err.message}`;
     }
+  });
+
+  // Clear both encoder fields
+  btnEncoderClear?.addEventListener('click', () => {
+    encoderInput.value = '';
+    encoderOutput.value = '';
+  });
+
+  // Copy encoder output to clipboard
+  btnEncoderCopy?.addEventListener('click', async () => {
+    const text = encoderOutput.value;
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      btnEncoderCopy.title = 'Copied!';
+      setTimeout(() => { btnEncoderCopy.title = 'Copy result'; }, 1500);
+    } catch { /* clipboard API blocked */ }
   });
 
   // --- 12. Local Snippets History ---
