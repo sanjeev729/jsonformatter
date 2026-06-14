@@ -109,9 +109,10 @@
               <!-- Text Area -->
               <textarea 
                 id="json-input" 
-                class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-transparent"
+                class="flex-1 p-4 font-mono text-[13px] text-ink placeholder:text-mute focus:outline-none resize-none overflow-y-auto leading-6 bg-transparent whitespace-pre overflow-x-auto"
                 placeholder='Paste or drag raw JSON text here... (e.g. {"status":"secure"})'
                 spellcheck="false"
+                wrap="off"
               ></textarea>
             </div>
             
@@ -378,7 +379,7 @@
 
 <script>
   import yaml from 'js-yaml';
-  import { renderJsonTree } from '../utils/TreeViewer.js';
+  import { renderJsonTree, escapeHtml } from '../utils/TreeViewer.js';
   import { jsonToXml, xmlToJson } from '../utils/XmlConverter.js';
 
   // --- Theme/Layout Elements ---

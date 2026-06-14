@@ -1,7 +1,7 @@
 /**
  * HTML escaper helper to prevent XSS
  */
-function escapeHtml(str) {
+export function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
