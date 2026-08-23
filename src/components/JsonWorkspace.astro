@@ -1,43 +1,56 @@
 ---
 ---
-<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 flex flex-col gap-6">
+<div class="max-w-[1750px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 flex-1 flex flex-col gap-3 sm:gap-4">
   <!-- Tabs Navigation -->
-  <div class="relative flex border-b border-hairline transition-colors duration-200 overflow-x-auto scrollbar-none">
+  <div class="relative flex items-center justify-between border-b border-hairline transition-colors duration-200">
     <!-- Mesh Gradient accent line under tabs -->
     <div class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-cyan to-violet w-0 transition-all duration-300" id="tab-indicator"></div>
     
-    <nav class="flex gap-1 sm:gap-6 -mb-[1px] flex-nowrap mx-0.5 sm:mx-0">
+    <nav class="flex gap-1 sm:gap-6 -mb-[1px] flex-nowrap mx-0.5 sm:mx-0 overflow-x-auto scrollbar-none">
       <button 
         data-target="panel-formatter" 
-        class="tab-btn pb-3 sm:pb-3.5 px-0.5 sm:px-1 font-sans font-medium text-[11px] sm:text-sm text-link border-b-2 border-link cursor-pointer transition-colors whitespace-nowrap"
+        class="tab-btn pb-2.5 sm:pb-3 px-0.5 sm:px-1 font-sans font-medium text-[11px] sm:text-sm text-link border-b-2 border-link cursor-pointer transition-colors whitespace-nowrap"
       >
         <span class="sm:hidden">Formatter</span>
         <span class="hidden sm:inline">Formatter & Validator</span>
       </button>
       <button 
         data-target="panel-diff" 
-        class="tab-btn pb-3 sm:pb-3.5 px-0.5 sm:px-1 font-sans font-medium text-[11px] sm:text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors whitespace-nowrap"
+        class="tab-btn pb-2.5 sm:pb-3 px-0.5 sm:px-1 font-sans font-medium text-[11px] sm:text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors whitespace-nowrap"
       >
         Diff Compare
       </button>
       <button 
         data-target="panel-converters" 
-        class="tab-btn pb-3 sm:pb-3.5 px-0.5 sm:px-1 font-sans font-medium text-[11px] sm:text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors whitespace-nowrap"
+        class="tab-btn pb-2.5 sm:pb-3 px-0.5 sm:px-1 font-sans font-medium text-[11px] sm:text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors whitespace-nowrap"
       >
         Converters
       </button>
       <button 
         data-target="panel-encoder" 
-        class="tab-btn pb-3 sm:pb-3.5 px-0.5 sm:px-1 font-sans font-medium text-[11px] sm:text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors whitespace-nowrap"
+        class="tab-btn pb-2.5 sm:pb-3 px-0.5 sm:px-1 font-sans font-medium text-[11px] sm:text-sm text-body hover:text-ink border-b-2 border-transparent cursor-pointer transition-colors whitespace-nowrap"
       >
         <span class="sm:hidden">Base64</span>
         <span class="hidden sm:inline">Base64 & URL</span>
       </button>
     </nav>
+
+    <!-- Sidebar Toggle Button -->
+    <button 
+      id="btn-toggle-sidebar" 
+      type="button"
+      class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 mb-1 rounded-md border border-hairline bg-canvas hover:bg-canvas-soft-2 text-body hover:text-ink text-xs font-medium shadow-level-1 transition-all cursor-pointer select-none shrink-0"
+      title="Toggle sidebar visibility to maximize workspace"
+    >
+      <svg class="w-3.5 h-3.5 text-mute" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <span id="sidebar-toggle-text">Hide Sidebar</span>
+    </button>
   </div>
 
   <!-- Workspace Cards Area -->
-  <div class="flex-1 flex flex-col min-h-[400px] sm:min-h-[600px] lg:flex-row gap-4 sm:gap-6">
+  <div class="flex-1 flex flex-col min-h-[500px] lg:min-h-[calc(100vh-210px)] lg:flex-row gap-3 sm:gap-5">
     <!-- Main Workspace Console -->
     <div class="flex-1 bg-canvas border border-hairline shadow-level-3 rounded-xl overflow-hidden flex flex-col transition-all duration-200">
       
@@ -528,26 +541,26 @@
     </div>
 
     <!-- Collapsible Snippets Sidebar -->
-    <div class="w-full lg:w-72 flex flex-col gap-4 sm:gap-6">
+    <div id="workspace-sidebar" class="w-full lg:w-72 flex flex-col gap-3 sm:gap-4 shrink-0 transition-all duration-300">
       <!-- Info security shield panel -->
-      <div class="bg-canvas border border-hairline shadow-level-3 rounded-xl p-4 sm:p-5 flex flex-col gap-3 transition-colors duration-200">
+      <div class="bg-canvas border border-hairline shadow-level-3 rounded-xl p-3.5 sm:p-4 flex flex-col gap-2 transition-colors duration-200">
         <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-full bg-link-bg-soft flex items-center justify-center text-link">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+          <div class="w-6 h-6 rounded-full bg-link-bg-soft flex items-center justify-center text-link shrink-0">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <span class="font-sans font-semibold text-sm text-ink">100% Client-Side Sandbox</span>
+          <span class="font-sans font-semibold text-xs sm:text-sm text-ink">100% In-Browser Privacy</span>
         </div>
-        <p class="text-xs text-mute leading-relaxed">
-          Online formatters often process data on servers, risking credentials leak. In this sandbox, **all processing happens in your browser locally**. Your content is never transmitted across the network.
+        <p class="text-[11px] sm:text-xs text-mute leading-relaxed">
+          All formatting, linting, diffing, and conversions execute locally in your browser. Zero data transmission.
         </p>
       </div>
 
       <!-- History Logger -->
-      <div class="bg-canvas border border-hairline shadow-level-3 rounded-xl flex-1 flex flex-col max-h-[400px] lg:max-h-none overflow-hidden transition-colors duration-200">
-        <div class="border-b border-hairline px-5 py-4 bg-canvas-soft-2 flex items-center justify-between select-none">
-          <span class="font-sans font-semibold text-sm text-ink">Recent Snippets</span>
+      <div class="bg-canvas border border-hairline shadow-level-3 rounded-xl flex-1 flex flex-col min-h-[250px] max-h-[400px] lg:max-h-none overflow-hidden transition-colors duration-200">
+        <div class="border-b border-hairline px-4 py-2.5 bg-canvas-soft-2 flex items-center justify-between select-none">
+          <span class="font-sans font-semibold text-xs sm:text-sm text-ink">Recent Snippets</span>
           <button id="btn-clear-history" class="text-[10px] text-mute hover:text-error transition-colors cursor-pointer">Clear All</button>
         </div>
         <!-- History items list -->
@@ -572,6 +585,29 @@
   const tabButtons = document.querySelectorAll('.tab-btn');
   const panels = document.querySelectorAll('.workspace-panel');
   const tabIndicator = document.getElementById('tab-indicator');
+  const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+  const workspaceSidebar = document.getElementById('workspace-sidebar');
+  const sidebarToggleText = document.getElementById('sidebar-toggle-text');
+
+  if (btnToggleSidebar && workspaceSidebar) {
+    btnToggleSidebar.addEventListener('click', () => {
+      const isHidden = workspaceSidebar.classList.contains('hidden');
+      if (isHidden) {
+        workspaceSidebar.classList.remove('hidden');
+        if (sidebarToggleText) sidebarToggleText.textContent = 'Hide Sidebar';
+        localStorage.setItem('sidebarVisible', 'true');
+      } else {
+        workspaceSidebar.classList.add('hidden');
+        if (sidebarToggleText) sidebarToggleText.textContent = 'Show Sidebar';
+        localStorage.setItem('sidebarVisible', 'false');
+      }
+    });
+
+    if (localStorage.getItem('sidebarVisible') === 'false') {
+      workspaceSidebar.classList.add('hidden');
+      if (sidebarToggleText) sidebarToggleText.textContent = 'Show Sidebar';
+    }
+  }
 
   // --- Formatter Elements ---
   const jsonInput = document.getElementById('json-input') as HTMLTextAreaElement;
