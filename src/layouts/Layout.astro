@@ -81,45 +81,7 @@ const ogImageUrl = new URL(image, Astro.site || 'https://jsonformatterai.com').t
       ]
     })} />
 
-    <!-- Structured Data (Schema.org) - FAQPage -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is the best online json formatter and validator?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "JSONFormatter.AI is the best json formatter and validator online. It processes data 100% in-browser, features instant AI JSON repair, side-by-side JSON diff comparison, and zero network calls."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How do I compare JSON files and check JSON diff?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Using our free JSON compare feature, paste two JSON payloads into the dual workspace view to see a color-coded syntax and structural JSON diff instantly."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is this free online json formatter secure for sensitive data?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, jsonformatterai.com operates entirely inside your local browser instance. No JSON input is ever uploaded to any external server or saved remotely."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How does the AI json formatter fix invalid JSON?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Our AI json formatter automatically detects syntax mistakes—such as unquoted key strings, trailing commas, missing brackets, or single quotes—and repairs them into valid JSON with a single click."
-          }
-        }
-      ]
-    })} />
+    <!-- Structured Data (Schema.org) - WebApplication -->
     
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

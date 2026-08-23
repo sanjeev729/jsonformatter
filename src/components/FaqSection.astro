@@ -1,0 +1,337 @@
+---
+// FaqSection.astro - Comprehensive SEO FAQ section with Schema.org JSON-LD FAQPage markup
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+  category: 'basics' | 'guides' | 'extensions' | 'safety';
+}
+
+const faqList: FaqItem[] = [
+  {
+    id: 'how-to-use-a-json-formatter',
+    question: 'How to use a JSON formatter?',
+    category: 'guides',
+    answer: 'To use a JSON formatter, copy your raw or minified JSON text and paste it into an online editor like jsonformatterai.com. Click the "Format" or "Beautify" button. The tool automatically validates your JSON syntax, flags any structural errors, and displays a neatly indented, color-coded structure with customizable spacing (2 spaces, 4 spaces, or tabs).'
+  },
+  {
+    id: 'what-is-the-use-of-json-formatter',
+    question: 'What is the use of JSON formatter?',
+    category: 'basics',
+    answer: 'A JSON formatter is used to parse, validate, and convert unformatted or compressed single-line JSON text into a visually structured, human-readable hierarchy. It helps developers inspect nested objects, detect missing quotes or brackets, debug API payloads, and reformat data for readability.'
+  },
+  {
+    id: 'how-can-i-format-a-json-file',
+    question: 'How can I format a JSON file?',
+    category: 'guides',
+    answer: 'You can format a JSON file by opening jsonformatterai.com, clicking "Load File" or pasting the raw contents of your .json file into the input pane. The tool instantly reformats the file with clean indentation and syntax highlighting. You can then download the formatted .json file or copy the clean code.'
+  },
+  {
+    id: 'how-to-write-a-json-format',
+    question: 'How to write a JSON format?',
+    category: 'guides',
+    answer: 'To write valid JSON format: 1) Wrap key-value pairs in curly braces {} for objects or square brackets [] for arrays. 2) Enclose all property keys and string values in double quotes (""). 3) Separate keys and values with a colon (:). 4) Separate items with commas, avoiding trailing commas at the end of objects or arrays.'
+  },
+  {
+    id: 'how-can-i-convert-a-file-to-json-format',
+    question: 'How can I convert a file to JSON format?',
+    category: 'guides',
+    answer: 'To convert files like CSV, XML, or YAML into JSON format, use the built-in multi-format converter on jsonformatterai.com. Paste your source file data or upload the file, select your source format, and click "Convert to JSON". The converter parses the structure and generates valid, formatted JSON instantly.'
+  },
+  {
+    id: 'what-is-json-beautify',
+    question: 'What is JSON beautify?',
+    category: 'basics',
+    answer: 'JSON beautify (also referred to as JSON pretty printing) is the process of taking minified or unformatted JSON strings and expanding them with consistent line breaks, proper indentation, and color-coded highlighting to make the structure clear and easy to read for humans.'
+  },
+  {
+    id: 'what-is-the-purpose-of-the-json-format',
+    question: 'What is the purpose of the JSON format?',
+    category: 'basics',
+    answer: 'The purpose of JSON (JavaScript Object Notation) is to serve as a lightweight, text-based, language-independent standard for data exchange. It allows software applications, servers, APIs, and web browsers to send, receive, and parse structured data efficiently.'
+  },
+  {
+    id: 'is-json-formatter-safe',
+    question: 'Is JSON formatter safe?',
+    category: 'safety',
+    answer: 'JSON formatters are completely safe when you use client-side tools like jsonformatterai.com. Unlike server-based formatters that upload data to external servers, jsonformatterai.com processes 100% of your data locally within your browser sandbox, ensuring API keys, secrets, and private data never leave your device.'
+  },
+  {
+    id: 'what-is-the-best-json-formatter-online',
+    question: 'what is the best json formatter online?',
+    category: 'safety',
+    answer: 'jsonformatterai.com is considered one of the best online JSON formatters because it provides 100% client-side browser privacy, instant AI-powered syntax repair, side-by-side JSON diff comparison, multi-format file conversion, dark mode, and full offline functionality without ads.'
+  },
+  {
+    id: 'what-is-json-formatter',
+    question: 'what is json formatter?',
+    category: 'basics',
+    answer: 'A JSON formatter is a software application or online utility designed to parse raw JSON payloads, highlight syntax errors, format nested data structures with consistent indentation, and make complex JSON readable for developers.'
+  },
+  {
+    id: 'how-to-use-json-formatter-chrome-extension',
+    question: 'how to use json formatter chrome extension',
+    category: 'extensions',
+    answer: 'To use a Chrome JSON formatter extension, install it from the Chrome Web Store (e.g., JSON Formatter or JSON Viewer). When you navigate to an API endpoint or raw .json URL in Chrome, the extension automatically intercepts the raw response and displays an interactive, expandable tree structure.'
+  },
+  {
+    id: 'what-is-json-formatter-pro',
+    question: 'what is json formatter pro?',
+    category: 'basics',
+    answer: 'JSON Formatter Pro refers to advanced developer tools—such as feature-packed browser extensions or specialized web suites like jsonformatterai.com—that go beyond basic beautification to offer AI error repair, side-by-side structural diffing, large file processing, and schema validation.'
+  },
+  {
+    id: 'how-to-use-chrome-json-formatter',
+    question: 'how to use chrome json formatter',
+    category: 'extensions',
+    answer: 'You can use Chrome JSON formatting by installing a Chrome extension to render JSON API responses directly in your browser tabs, or by bookmarking jsonformatterai.com to format, validate, compare, and fix JSON payloads inside Google Chrome with zero installation required.'
+  },
+  {
+    id: 'what-is-a-json-formatter',
+    question: 'what is a json formatter?',
+    category: 'basics',
+    answer: 'A JSON formatter is a utility tool that transforms messy, single-line, or minified JSON text into structured, indented code with line numbers, expandable nodes, and real-time syntax checking.'
+  },
+  {
+    id: 'how-to-install-json-formatter-in-sublime-text',
+    question: 'how to install json formatter in sublime text',
+    category: 'extensions',
+    answer: 'To install a JSON formatter in Sublime Text: 1) Press Ctrl+Shift+P (Cmd+Shift+P on Mac) to open the Command Palette. 2) Type "Package Control: Install Package" and hit Enter. 3) Search for "Pretty JSON" and press Enter. 4) Select your JSON snippet and press Ctrl+Alt+J (Cmd+Ctrl+J on Mac) to format.'
+  },
+  {
+    id: 'how-to-use-json-formatter',
+    question: 'how to use json formatter',
+    category: 'guides',
+    answer: 'Simply paste your unformatted JSON payload into jsonformatterai.com, select your desired indentation (2 spaces, 4 spaces, or tab), and let the parser immediately generate clean, formatted JSON with syntax validation.'
+  },
+  {
+    id: 'how-to-use-json-formatter-chrome',
+    question: 'how to use json formatter chrome',
+    category: 'extensions',
+    answer: 'To format JSON in Chrome, either install a JSON viewing extension from the Chrome Web Store to format raw web responses, or open jsonformatterai.com directly in any Chrome browser window for private, instant formatting.'
+  },
+  {
+    id: 'what-is-the-json-formatter',
+    question: 'what is the json formatter?',
+    category: 'basics',
+    answer: 'The JSON formatter is an indispensable developer tool that validates, repairs, and visualizes JSON payloads into readable hierarchical trees.'
+  },
+  {
+    id: 'what-is-the-best-json-formatter',
+    question: 'what is the best json formatter?',
+    category: 'safety',
+    answer: 'The best JSON formatter prioritizes speed, developer security, and rich features. jsonformatterai.com is a leading choice because it operates 100% locally in your browser, offers AI syntax auto-repair, side-by-side JSON diffing, and export options.'
+  },
+  {
+    id: 'json-formatter-how-to-use',
+    question: 'json formatter how to use',
+    category: 'guides',
+    answer: 'Copy your raw JSON code, paste it into the jsonformatterai.com input panel, and click "Format". If your JSON has errors like missing quotes or extra commas, use the AI Repair feature to fix them automatically.'
+  },
+  {
+    id: 'how-to-use-json-formatter-extension',
+    question: 'how to use json formatter extension',
+    category: 'extensions',
+    answer: 'After installing a JSON extension from your browser web store, visit any URL returning JSON data. The extension automatically formats the plain JSON text into a color-coded tree with collapsible nodes in your browser window.'
+  },
+  {
+    id: 'how-can-i-make-json-pretty-printed',
+    question: 'How can I make JSON pretty printed?',
+    category: 'guides',
+    answer: 'You can make JSON pretty printed using several methods: 1) Online: Paste code into jsonformatterai.com. 2) JavaScript: Call JSON.stringify(data, null, 2). 3) Python: Use json.dumps(data, indent=4). 4) CLI: Pipe JSON into "jq" using command "cat data.json | jq".'
+  }
+];
+
+// Schema.org FAQPage JSON-LD payload creation
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqList.map((item) => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `<p>${item.answer}</p>`
+    }
+  }))
+};
+---
+
+<section class="max-w-[1750px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-12 sm:py-16 my-8 border-t border-hairline/60 bg-canvas/40 backdrop-blur-sm transition-colors duration-200">
+  <!-- FAQ JSON-LD SEO Script -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <!-- Section Header -->
+  <div class="max-w-4xl mx-auto text-center mb-10 sm:mb-12">
+    <span class="inline-flex items-center gap-2 text-caption-mono text-link text-xs font-semibold uppercase tracking-wider bg-link-bg-soft/50 dark:bg-link-bg-soft/10 px-3 py-1 rounded-full border border-link/30 mb-4">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      FREQUENTLY ASKED QUESTIONS
+    </span>
+    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-ink tracking-tight mb-4">
+      JSON Formatter <span class="bg-gradient-to-r from-gradient-develop-start via-gradient-preview-start to-highlight-pink bg-clip-text text-transparent">FAQ & Developer Guide</span>
+    </h2>
+    <p class="text-body text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+      Find detailed answers to common questions about formatting, validating, converting, securing, and pretty printing JSON payloads online and in your favorite developer tools.
+    </p>
+  </div>
+
+  <!-- Interactive Search & Category Filter Controls -->
+  <div class="max-w-4xl mx-auto mb-8 space-y-4">
+    <div class="relative">
+      <input 
+        type="text" 
+        id="faq-search-input"
+        placeholder="Search questions or keywords (e.g., Chrome, Pretty Print, Safety, Sublime)..." 
+        class="w-full px-4 py-3 pl-11 rounded-xl bg-canvas-soft border border-hairline focus:border-link focus:ring-2 focus:ring-link/20 text-ink text-sm transition-all duration-200 outline-none placeholder:text-mute"
+      />
+      <svg class="w-5 h-5 text-mute absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex flex-wrap items-center justify-center gap-2 pt-2" id="faq-category-filters">
+      <button data-cat="all" class="faq-cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 border bg-primary text-on-primary border-primary">
+        All Questions ({faqList.length})
+      </button>
+      <button data-cat="basics" class="faq-cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 border bg-canvas-soft text-body hover:text-ink border-hairline hover:border-hairline-strong">
+        Basics & Concepts
+      </button>
+      <button data-cat="guides" class="faq-cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 border bg-canvas-soft text-body hover:text-ink border-hairline hover:border-hairline-strong">
+        How-To & Guides
+      </button>
+      <button data-cat="extensions" class="faq-cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 border bg-canvas-soft text-body hover:text-ink border-hairline hover:border-hairline-strong">
+        Chrome & Extensions
+      </button>
+      <button data-cat="safety" class="faq-cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 border bg-canvas-soft text-body hover:text-ink border-hairline hover:border-hairline-strong">
+        Security & Best Tools
+      </button>
+    </div>
+  </div>
+
+  <!-- FAQ Items Container -->
+  <div class="max-w-4xl mx-auto space-y-3.5" id="faq-accordion-container">
+    {faqList.map((item, index) => (
+      <details 
+        class="faq-item group border border-hairline hover:border-link/30 rounded-xl bg-canvas/70 dark:bg-canvas/40 transition-all duration-200 shadow-sm overflow-hidden"
+        data-category={item.category}
+        data-question={item.question.toLowerCase()}
+        data-answer={item.answer.toLowerCase()}
+      >
+        <summary class="flex items-center justify-between gap-4 p-4 sm:p-5 cursor-pointer select-none font-semibold text-ink text-sm sm:text-base list-none focus:outline-none focus:bg-canvas-soft/50">
+          <span class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-md bg-link-bg-soft/40 dark:bg-link-bg-soft/10 text-link text-xs font-mono font-bold flex items-center justify-center shrink-0">
+              {index + 1}
+            </span>
+            <span>{item.question}</span>
+          </span>
+          <svg class="w-5 h-5 text-mute group-open:rotate-180 group-open:text-link transition-transform duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <div class="px-4 pb-5 pt-1 sm:px-5 sm:pb-6 text-body text-xs sm:text-sm leading-relaxed border-t border-hairline/40 bg-canvas-soft/40 dark:bg-canvas-soft/10">
+          <p class="pt-2">{item.answer}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+
+  <!-- Empty Search Result State -->
+  <div id="faq-empty-state" class="hidden max-w-md mx-auto text-center py-10 space-y-3">
+    <div class="w-12 h-12 rounded-full bg-warning-soft/40 dark:bg-warning-soft/10 text-warning-deep dark:text-warning flex items-center justify-center mx-auto text-xl font-bold">
+      ?
+    </div>
+    <h3 class="text-base font-semibold text-ink">No matching FAQ questions found</h3>
+    <p class="text-xs text-mute">Try searching for different keywords like "chrome", "format", "safety", or "sublime".</p>
+    <button id="faq-reset-search-btn" class="mt-2 text-xs font-semibold text-link hover:underline">
+      Clear search and reset filters
+    </button>
+  </div>
+</section>
+
+<!-- Client-side Interactive Filter & Search Script -->
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('faq-search-input');
+    const categoryBtns = document.querySelectorAll('.faq-cat-btn');
+    const faqItems = document.querySelectorAll('.faq-item');
+    const emptyState = document.getElementById('faq-empty-state');
+    const resetBtn = document.getElementById('faq-reset-search-btn');
+
+    let currentCategory = 'all';
+    let currentSearchTerm = '';
+
+    function filterFaqs() {
+      let visibleCount = 0;
+
+      faqItems.forEach((item) => {
+        const itemCategory = item.getAttribute('data-category');
+        const questionText = item.getAttribute('data-question') || '';
+        const answerText = item.getAttribute('data-answer') || '';
+
+        const matchesCategory = currentCategory === 'all' || itemCategory === currentCategory;
+        const matchesSearch = !currentSearchTerm || 
+          questionText.includes(currentSearchTerm) || 
+          answerText.includes(currentSearchTerm);
+
+        if (matchesCategory && matchesSearch) {
+          item.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+        } else {
+          emptyState.classList.add('hidden');
+        }
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentSearchTerm = e.target.value.trim().toLowerCase();
+        filterFaqs();
+      });
+    }
+
+    categoryBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        categoryBtns.forEach((b) => {
+          b.classList.remove('bg-primary', 'text-on-primary', 'border-primary');
+          b.classList.add('bg-canvas-soft', 'text-body', 'border-hairline');
+        });
+        btn.classList.remove('bg-canvas-soft', 'text-body', 'border-hairline');
+        btn.classList.add('bg-primary', 'text-on-primary', 'border-primary');
+
+        currentCategory = btn.getAttribute('data-cat') || 'all';
+        filterFaqs();
+      });
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        currentSearchTerm = '';
+        currentCategory = 'all';
+
+        categoryBtns.forEach((b) => {
+          if (b.getAttribute('data-cat') === 'all') {
+            b.classList.add('bg-primary', 'text-on-primary', 'border-primary');
+            b.classList.remove('bg-canvas-soft', 'text-body', 'border-hairline');
+          } else {
+            b.classList.remove('bg-primary', 'text-on-primary', 'border-primary');
+            b.classList.add('bg-canvas-soft', 'text-body', 'border-hairline');
+          }
+        });
+
+        filterFaqs();
+      });
+    }
+  });
+</script>
