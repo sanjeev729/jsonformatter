@@ -1,8 +1,8 @@
-# JSONFormatter — Privacy-First JSON Formatter & Developer Toolset
+# JSONFormatter.AI — Privacy-First JSON Formatter & Developer Toolset
 
 > **100% In-Browser Processing. Zero Data Transfers. Local Secure Sandbox.**
 
-JSONFormatter is a high-performance, privacy-first web application built with **Astro** and **Tailwind CSS**. Designed for developers, security engineers, and data teams who need to format, validate, diff-compare, convert, and encode JSON payloads without sending sensitive data over the network.
+JSONFormatter.AI is a high-performance, privacy-first web application built with **Astro** and **Tailwind CSS**. Designed for developers, security engineers, and data teams who need to format, validate, diff-compare, convert, and encode JSON payloads without sending sensitive data over the network.
 
 ---
 
