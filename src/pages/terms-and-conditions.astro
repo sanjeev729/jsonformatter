@@ -1,0 +1,124 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const lastUpdated = "August 23, 2026";
+---
+
+<Layout 
+  title="Terms & Conditions — JSONFormatter.AI | Service Agreement"
+  description="Review the terms and conditions for using JSONFormatter.AI. Learn about permitted use, intellectual property, service disclaimers, and user obligations."
+>
+  <div class="min-h-screen flex flex-col relative overflow-hidden bg-canvas-soft transition-colors duration-200">
+    <!-- Ambient background glow -->
+    <div class="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full filter blur-[120px] opacity-15 dark:opacity-20 pointer-events-none select-none z-0">
+      <div class="absolute inset-0 bg-gradient-to-tr from-violet-deep via-cyan-deep to-highlight-pink"></div>
+    </div>
+
+    <Header />
+
+    <main class="relative z-10 flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <!-- Breadcrumb & Header -->
+      <div class="mb-8 border-b border-hairline pb-6">
+        <div class="flex items-center gap-2 mb-3 text-xs font-mono text-mute">
+          <a href="/" class="hover:text-link transition-colors">Home</a>
+          <span>/</span>
+          <span class="text-ink font-medium">Terms & Conditions</span>
+        </div>
+        
+        <div class="flex items-center gap-2.5 mb-3">
+          <span class="text-caption-mono text-link text-[11px] font-semibold uppercase tracking-wider bg-link-bg-soft/50 dark:bg-link-bg-soft/10 px-2.5 py-0.5 rounded-full border border-link/25">
+            Legal Agreement
+          </span>
+          <span class="text-caption-mono text-mute text-xs">Last Updated: {lastUpdated}</span>
+        </div>
+
+        <h1 class="font-sans text-3xl sm:text-4xl font-bold text-ink tracking-tight mb-3">
+          Terms & Conditions
+        </h1>
+        <p class="font-sans text-body text-base leading-relaxed text-body max-w-2xl">
+          By accessing or using <strong class="text-ink">JSONFormatter.AI</strong>, you agree to comply with and be bound by these Terms & Conditions. Please read them carefully.
+        </p>
+      </div>
+
+      <!-- Detailed Sections -->
+      <div class="space-y-8 font-sans text-body text-sm sm:text-base leading-relaxed">
+        
+        <section class="space-y-3">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">01.</span> Acceptance of Terms
+          </h2>
+          <p>
+            By accessing JSONFormatter.AI (the "Service"), you acknowledge that you have read, understood, and agreed to these Terms. If you do not agree with any part of these Terms, you must immediately discontinue use of the Service.
+          </p>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">02.</span> Permitted Use & Developer License
+          </h2>
+          <p>
+            JSONFormatter.AI grants you a free, non-exclusive, non-transferable, revocable license to access and use the Service for personal, educational, software development, and commercial purposes.
+          </p>
+          <ul class="list-disc list-inside space-y-1 pl-2 text-body">
+            <li>You may format, validate, compare, repair, and convert JSON data for any personal or business project.</li>
+            <li>You may not attempt to reverse engineer, disrupt, or launch automated denial-of-service attacks against our platform infrastructure.</li>
+            <li>You may not embed the platform into malicious software or misuse the service to violate third-party intellectual property.</li>
+          </ul>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">03.</span> Intellectual Property Rights
+          </h2>
+          <p>
+            All original source code, web design elements, interface styling, logos, trademarks, and documentation associated with JSONFormatter.AI remain the exclusive property of JSONFormatter.AI.
+          </p>
+          <p>
+            <strong class="text-ink">Your Data Belongs to You:</strong> JSONFormatter.AI claims zero ownership rights over any JSON text, API responses, or code snippets you process using our web interface.
+          </p>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">04.</span> Disclaimer of Warranties
+          </h2>
+          <div class="p-4 rounded-lg bg-canvas border border-hairline font-mono text-xs text-body leading-relaxed">
+            THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+          </div>
+          <p>
+            While we implement advanced client-side validation algorithms and AI JSON repair algorithms, we do not warrant that all syntax fixes will produce syntactically identical semantics to your original unformatted payload.
+          </p>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">05.</span> Limitation of Liability
+          </h2>
+          <p>
+            In no event shall JSONFormatter.AI, its maintainers, or affiliates be liable for any direct, indirect, incidental, consequential, or special damages arising out of or in connection with your use or inability to use the Service.
+          </p>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">06.</span> Modifications & Inquiries
+          </h2>
+          <p>
+            We reserve the right to modify these Terms at any time. Changes will take effect immediately upon posting to this page.
+          </p>
+          <div class="p-4 rounded-lg bg-canvas border border-hairline flex items-center gap-3">
+            <svg class="w-5 h-5 text-link" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span class="font-mono text-sm text-ink font-semibold">legal@jsonformatterai.com</span>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <Footer />
+  </div>
+</Layout>

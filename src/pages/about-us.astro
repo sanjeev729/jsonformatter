@@ -1,0 +1,127 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout 
+  title="About Us — JSONFormatter.AI | The Privacy-First Developer JSON Tool"
+  description="Discover the story and mission behind JSONFormatter.AI. We build high-performance, privacy-first, 100% in-browser JSON formatting, validation, and AI repair tools for modern developers."
+>
+  <div class="min-h-screen flex flex-col relative overflow-hidden bg-canvas-soft transition-colors duration-200">
+    <!-- Ambient background glow -->
+    <div class="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[800px] h-[450px] rounded-full filter blur-[120px] opacity-15 dark:opacity-20 pointer-events-none select-none z-0">
+      <div class="absolute inset-0 bg-gradient-to-tr from-cyan-deep via-violet-deep to-highlight-pink"></div>
+    </div>
+
+    <Header />
+
+    <main class="relative z-10 flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <!-- Breadcrumb & Header -->
+      <div class="mb-10 border-b border-hairline pb-8 text-center sm:text-left">
+        <div class="flex items-center justify-center sm:justify-start gap-2 mb-3 text-xs font-mono text-mute">
+          <a href="/" class="hover:text-link transition-colors">Home</a>
+          <span>/</span>
+          <span class="text-ink font-medium">About Us</span>
+        </div>
+        
+        <div class="inline-flex items-center gap-2.5 mb-4">
+          <span class="text-caption-mono text-link text-[11px] font-semibold uppercase tracking-wider bg-link-bg-soft/50 dark:bg-link-bg-soft/10 px-3 py-1 rounded-full border border-link/25">
+            Our Mission & Architecture
+          </span>
+        </div>
+
+        <h1 class="font-sans text-3xl sm:text-5xl font-extrabold text-ink tracking-tight mb-4">
+          Built for Developers Who Value <span class="bg-gradient-to-r from-cyan-deep via-violet to-highlight-pink bg-clip-text text-transparent">Privacy & Speed</span>
+        </h1>
+        <p class="font-sans text-body text-base sm:text-lg leading-relaxed text-body max-w-3xl">
+          JSONFormatter.AI was engineered to solve a widespread problem: developers inadvertently pasting sensitive API keys, customer PII, and production payloads into backend-backed web tools.
+        </p>
+      </div>
+
+      <!-- Hero Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+        <div class="p-6 rounded-xl bg-canvas border border-hairline shadow-level-1 flex flex-col justify-between">
+          <div class="font-mono text-3xl sm:text-4xl font-extrabold text-cyan-deep mb-2">100%</div>
+          <div>
+            <h3 class="font-sans font-semibold text-ink text-base mb-1">In-Browser Execution</h3>
+            <p class="font-sans text-xs text-mute leading-normal">Zero server uploads. Your JSON data never leaves your local RAM memory.</p>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-xl bg-canvas border border-hairline shadow-level-1 flex flex-col justify-between">
+          <div class="font-mono text-3xl sm:text-4xl font-extrabold text-violet mb-2">&lt; 5ms</div>
+          <div>
+            <h3 class="font-sans font-semibold text-ink text-base mb-1">Instant Processing</h3>
+            <p class="font-sans text-xs text-mute leading-normal">Instant formatting, tree parsing, and diff calculation for multi-megabyte payloads.</p>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-xl bg-canvas border border-hairline shadow-level-1 flex flex-col justify-between">
+          <div class="font-mono text-3xl sm:text-4xl font-extrabold text-highlight-pink mb-2">AI-Repair</div>
+          <div>
+            <h3 class="font-sans font-semibold text-ink text-base mb-1">Automated Syntax Recovery</h3>
+            <p class="font-sans text-xs text-mute leading-normal">Smart heuristic engines that fix trailing commas, unquoted keys, and broken quotes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Story & Architecture -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div class="p-6 sm:p-8 rounded-xl bg-canvas border border-hairline shadow-level-1 space-y-4">
+          <div class="w-10 h-10 rounded-lg bg-link/15 text-link flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h2 class="font-sans font-bold text-xl text-ink">Why Client-Side Security Matters</h2>
+          <p class="font-sans text-sm text-body leading-relaxed">
+            Traditional online JSON tools send your text to remote cloud servers to format or convert it. This creates immense security vulnerabilities for engineers handling API tokens, database backups, and confidential user records.
+          </p>
+          <p class="font-sans text-sm text-body leading-relaxed">
+            With <strong class="text-ink">JSONFormatter.AI</strong>, we eliminated the backend entirely. All transformations run locally inside your web browser sandbox, delivering true privacy and zero latency.
+          </p>
+        </div>
+
+        <div class="p-6 sm:p-8 rounded-xl bg-canvas border border-hairline shadow-level-1 space-y-4">
+          <div class="w-10 h-10 rounded-lg bg-cyan-deep/15 text-cyan-deep flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h2 class="font-sans font-bold text-xl text-ink">Modern Developer Suite</h2>
+          <p class="font-sans text-sm text-body leading-relaxed">
+            JSONFormatter.AI goes far beyond simple indentation. Our suite integrates key developer workflows into a single cohesive interface:
+          </p>
+          <ul class="font-sans text-sm text-body space-y-2 list-disc list-inside">
+            <li><strong class="text-ink">Side-by-Side Diffing:</strong> Real-time visual comparison between two JSON payloads.</li>
+            <li><strong class="text-ink">Multi-Format Conversion:</strong> Instant conversion to CSV, XML, YAML, and TypeScript Interfaces.</li>
+            <li><strong class="text-ink">Collapsible Tree Views:</strong> Deep inspection for nested arrays and complex schemas.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Call to Action Banner -->
+      <div class="p-8 sm:p-10 rounded-2xl bg-gradient-to-r from-canvas-soft-2 via-canvas to-canvas-soft-2 border border-hairline shadow-level-2 text-center relative overflow-hidden">
+        <h2 class="font-sans text-2xl sm:text-3xl font-extrabold text-ink mb-3">
+          Ready to experience the privacy-first JSON suite?
+        </h2>
+        <p class="font-sans text-sm text-body max-w-xl mx-auto mb-6">
+          Format, validate, repair, and convert your JSON payloads with maximum security.
+        </p>
+        <a 
+          href="/" 
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-on-primary font-sans text-sm font-semibold hover:opacity-90 transition-all duration-200 shadow-level-1"
+        >
+          <span>Open Workspace</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+
+    </main>
+
+    <Footer />
+  </div>
+</Layout>

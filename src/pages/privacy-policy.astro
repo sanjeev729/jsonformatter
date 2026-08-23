@@ -1,0 +1,129 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const lastUpdated = "August 23, 2026";
+---
+
+<Layout 
+  title="Privacy Policy — JSONFormatter.AI | 100% Client-Side Private JSON Tool"
+  description="Read the JSONFormatter.AI privacy policy. We guarantee 100% client-side, in-browser JSON formatting and validation with zero server data storage or tracking."
+>
+  <div class="min-h-screen flex flex-col relative overflow-hidden bg-canvas-soft transition-colors duration-200">
+    <!-- Ambient background glow -->
+    <div class="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full filter blur-[120px] opacity-15 dark:opacity-20 pointer-events-none select-none z-0">
+      <div class="absolute inset-0 bg-gradient-to-tr from-cyan-deep via-violet-deep to-highlight-pink"></div>
+    </div>
+
+    <Header />
+
+    <main class="relative z-10 flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <!-- Breadcrumb & Header -->
+      <div class="mb-8 border-b border-hairline pb-6">
+        <div class="flex items-center gap-2 mb-3 text-xs font-mono text-mute">
+          <a href="/" class="hover:text-link transition-colors">Home</a>
+          <span>/</span>
+          <span class="text-ink font-medium">Privacy Policy</span>
+        </div>
+        
+        <div class="flex items-center gap-2.5 mb-3">
+          <span class="text-caption-mono text-link text-[11px] font-semibold uppercase tracking-wider bg-link-bg-soft/50 dark:bg-link-bg-soft/10 px-2.5 py-0.5 rounded-full border border-link/25">
+            Security Guarantee
+          </span>
+          <span class="text-caption-mono text-mute text-xs">Last Updated: {lastUpdated}</span>
+        </div>
+
+        <h1 class="font-sans text-3xl sm:text-4xl font-bold text-ink tracking-tight mb-3">
+          Privacy Policy
+        </h1>
+        <p class="font-sans text-body text-base leading-relaxed text-body max-w-2xl">
+          At <strong class="text-ink">JSONFormatter.AI</strong>, your privacy and data security are fundamental to how our platform is engineered. We process 100% of your JSON data locally inside your browser session.
+        </p>
+      </div>
+
+      <!-- Core Security Card -->
+      <div class="mb-10 p-6 rounded-xl bg-canvas border border-hairline shadow-level-1 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-deep/10 rounded-full filter blur-2xl pointer-events-none"></div>
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-lg bg-cyan-deep/15 text-cyan-deep flex items-center justify-center shrink-0 mt-0.5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="font-sans font-semibold text-lg text-ink mb-1">
+              Zero Server Uploads & Zero Payload Logging
+            </h2>
+            <p class="font-sans text-sm text-body leading-relaxed">
+              When you paste or load JSON into JSONFormatter.AI, the parsing, formatting, validation, diff comparison, and AI syntax repairs are executed directly by your client’s Web browser engine. Your JSON data never touches an external server or database.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Sections -->
+      <div class="space-y-8 font-sans text-body text-sm sm:text-base leading-relaxed">
+        
+        <section class="space-y-3">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">01.</span> Information We Process
+          </h2>
+          <p>
+            Because we use a purely client-side web architecture:
+          </p>
+          <ul class="list-disc list-inside space-y-2 pl-2 text-body">
+            <li><strong class="text-ink">JSON Data & Inputs:</strong> All JSON text, files, and formatted outputs remain entirely inside your browser's RAM memory and are cleared when you refresh or close the browser tab.</li>
+            <li><strong class="text-ink">User Preferences:</strong> We use HTML5 <code class="font-mono text-xs bg-canvas-soft-2 px-1.5 py-0.5 rounded border border-hairline">localStorage</code> strictly to remember non-sensitive user settings, such as theme preference (Light/Dark mode) and indent spacing choices.</li>
+            <li><strong class="text-ink">No Telemetry Tracking:</strong> We do not log payload content, user API keys, passwords, or personal credentials contained inside your JSON payloads.</li>
+          </ul>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">02.</span> AI JSON Repair Engine & Privacy
+          </h2>
+          <p>
+            Our AI JSON Repair module runs custom WebAssembly and JavaScript heuristics inside your web browser. If an experimental remote AI enhancement feature is invoked, data is anonymized and transmitted over encrypted TLS channels without storing any user identifiable session history.
+          </p>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">03.</span> Cookies and Analytics
+          </h2>
+          <p>
+            JSONFormatter.AI does not use invasive third-party tracking cookies or advertising pixels. Standard anonymous website performance metrics (such as aggregated pageviews) may be processed to monitor uptime and site availability.
+          </p>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">04.</span> Data Security & Local Isolation
+          </h2>
+          <p>
+            Your browser environment enforces strict Same-Origin Policy (SOP) and Content Security Policy (CSP) headers to isolate your formatted data from external websites. We recommend keeping your browser updated for maximum security.
+          </p>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-hairline">
+          <h2 class="font-sans font-bold text-xl text-ink tracking-tight flex items-center gap-2">
+            <span class="font-mono text-link text-sm">05.</span> Contact Privacy Officer
+          </h2>
+          <p>
+            If you have questions about our security practices or privacy commitments, please reach out to our team:
+          </p>
+          <div class="p-4 rounded-lg bg-canvas border border-hairline flex items-center gap-3">
+            <svg class="w-5 h-5 text-link" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span class="font-mono text-sm text-ink font-semibold">privacy@jsonformatterai.com</span>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <Footer />
+  </div>
+</Layout>
