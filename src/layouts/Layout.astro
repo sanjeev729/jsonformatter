@@ -4,12 +4,17 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
 
 const { 
-  title = "JSONFormatter — Privacy-First JSON Formatter, Linter & Converter",
-  description = "A premium, local-only JSON formatter, linter, and converter. Clean valid JSON, view interactive trees, compare differences, and convert formats. 100% client-side, secure, and offline-capable."
+  title = "JSON Formatter & Validator Online — Best Free AI JSON Formatter & Diff Tool",
+  description = "Free online JSON formatter, validator, and converter with AI JSON repair. Compare JSON, run JSON diff, convert text to JSON, and format pretty JSON online 100% privately in browser.",
+  image = "/og-image.png"
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://jsonformatterai.com');
+const ogImageUrl = new URL(image, Astro.site || 'https://jsonformatterai.com').toString();
 ---
 
 <!doctype html>
@@ -19,18 +24,107 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="keywords" content="json formatter, json formatter online, online json formatter, best json formatter, json formatter and validator, free json formatter, json compare, pretty json formatter, json formatter chrome extension, compare json, json diff, json converter, json formatter & validator, free online json formatter, text to json formatter, json formatter online free, json formatter example, json formatter tool, online json formatter and validator, ai json formatter" />
     
     <!-- Primary SEO Meta Tags -->
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="author" content="JSONFormatter Client Sandbox" />
+    <meta name="author" content="jsonformatterai.com" />
+
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="jsonformatterai.com" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="jsonformatterai.com - Best Free Online JSON Formatter, Validator & Diff Tool" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:site" content="@jsonformatterai" />
+
+    <!-- Structured Data (Schema.org) - WebApplication -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSONFormatter.AI",
+      "url": "https://jsonformatterai.com",
+      "description": description,
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "JSON Formatter & Validator",
+        "Pretty JSON Formatter",
+        "JSON Diff & Compare JSON",
+        "AI JSON Formatter Repair",
+        "JSON Converter (CSV, XML, YAML, TS)",
+        "Text to JSON Formatter",
+        "100% Client-Side Privacy Sandbox"
+      ]
+    })} />
+
+    <!-- Structured Data (Schema.org) - FAQPage -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the best online json formatter and validator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "JSONFormatter.AI is the best json formatter and validator online. It processes data 100% in-browser, features instant AI JSON repair, side-by-side JSON diff comparison, and zero network calls."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I compare JSON files and check JSON diff?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Using our free JSON compare feature, paste two JSON payloads into the dual workspace view to see a color-coded syntax and structural JSON diff instantly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this free online json formatter secure for sensitive data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, jsonformatterai.com operates entirely inside your local browser instance. No JSON input is ever uploaded to any external server or saved remotely."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the AI json formatter fix invalid JSON?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our AI json formatter automatically detects syntax mistakes—such as unquoted key strings, trailing commas, missing brackets, or single quotes—and repairs them into valid JSON with a single click."
+          }
+        }
+      ]
+    })} />
     
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <!-- Inline Theme Script (prevents theme flash on load) -->
     <script is:inline>
@@ -54,7 +148,8 @@ const {
       }
     </script>
   </head>
-  <body class="bg-canvas-soft text-ink selection:bg-primary selection:text-on-primary">
+  <body class="bg-canvas-soft text-ink selection:bg-primary selection:text-on-primary font-sans antialiased">
     <slot />
   </body>
 </html>
+

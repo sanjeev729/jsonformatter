@@ -1,8 +1,9 @@
-# JSONFormatter.AI — Privacy-First JSON Formatter & Developer Toolset
+# jsonformatterai.com — Privacy-First JSON Formatter & Developer Toolset
 
-> **100% In-Browser Processing. Zero Data Transfers. Local Secure Sandbox.**
+> **100% In-Browser Processing. Zero Data Transfers. Local Secure Sandbox.**  
+> Website: [https://jsonformatterai.com](https://jsonformatterai.com)
 
-JSONFormatter.AI is a high-performance, privacy-first web application built with **Astro** and **Tailwind CSS**. Designed for developers, security engineers, and data teams who need to format, validate, diff-compare, convert, and encode JSON payloads without sending sensitive data over the network.
+**jsonformatterai.com** is a high-performance, privacy-first web application built with **Astro** and **Tailwind CSS**. Designed for developers, security engineers, and data teams who need to format, validate, diff-compare, convert, and encode JSON payloads without sending sensitive data over the network.
 
 ---
 
@@ -20,10 +21,12 @@ JSONFormatter.AI is a high-performance, privacy-first web application built with
 ## 📂 Project Structure
 
 ```text
-jsonformatter/
+jsonformatterai.com/
 ├── public/
 │   ├── favicon.ico
-│   └── favicon.svg
+│   ├── favicon.svg
+│   ├── robots.txt
+│   └── sitemap.xml
 ├── src/
 │   ├── components/
 │   │   ├── Footer.astro         # Compact responsive footer with privacy links
